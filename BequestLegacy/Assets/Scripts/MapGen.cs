@@ -10,6 +10,7 @@ public class MapGen : MonoBehaviour
     [SerializeField] private int tileHeight;
     [SerializeField] private GameObject roomTest;
     [SerializeField] private GameObject pathRoom;
+    [SerializeField] private GameObject extraRoom;
     [SerializeField] private GameObject DoorTest;
 
 
@@ -43,9 +44,9 @@ public class MapGen : MonoBehaviour
         */
         InitialiseMap();
         CreatePath();
-        CreateVisual();
         PlaceExtraRooms();
         BlockNonPassages();
+        CreateVisual();
     }
 
     private bool CheckPastPath(int newPathIndex)
@@ -190,32 +191,110 @@ public class MapGen : MonoBehaviour
 
     private void PlaceExtraRooms()
     {
+        int numOfExtraRooms = 2;
+        List<Index2TileData> freeConnectedSpace = new List<Index2TileData>();
 
         foreach(Index2TileData tile in map)
         {
-            if(!tile.tileData.isUsed)
+            bool canAdd = false;
+            if (tile.tileData.isUsed)
             {
-                //check left
-                //set connection if avaliable 
-                if(0 <= map[tile.index].tileData.position.x - tileWidth)
-                {
-
-                }
-
-
-                //check up 
-                //set connection if avaliable 
-
-                //check right
-                //set connection if avaliable 
-
-                //check down
-                //set connection if avaliable 
-
+                continue;
             }
 
+            if (0 <= map[tile.index].tileData.position.x - tileWidth)
+            {
+                if (map[tile.index - 1].tileData.isUsed)
+                    canAdd = true;
+            }
+
+            //check up 
+            //set connection if avaliable 
+            if (map[tile.index].tileData.position.y + tileHeight <= 48)
+            {
+                if (map[tile.index + 4].tileData.isUsed)
+                    canAdd = true;
+            }
+
+            //check right
+            //set connection if avaliable 
+            if (map[tile.index].tileData.position.x + tileWidth <= 48)
+            {
+                if (map[tile.index + 1].tileData.isUsed)
+                    canAdd = true;
+            }
+
+            //check down
+            //set connection if avaliable 
+            if (0 <= map[tile.index].tileData.position.y - tileHeight)
+            {
+                if (map[tile.index - 4].tileData.isUsed)
+                    canAdd = true;
+            }
+
+            if(canAdd)
+                freeConnectedSpace.Add(tile);
         }
 
+        List<Index2TileData> pickedSpace = new List<Index2TileData>();
+
+        for (int i = 0; i < numOfExtraRooms; i++)
+        {
+            pickedSpace.Add(freeConnectedSpace[Random.Range(0, freeConnectedSpace.Count)]);
+        }
+        Debug.Log(pickedSpace.Count);
+
+        foreach(Index2TileData tile in pickedSpace)
+        {
+            //check left
+            //set connection if avaliable 
+            if(0 <= map[tile.index].tileData.position.x - tileWidth)
+            {
+                if (map[tile.index - 1].tileData.isStart && map[tile.index - 1].tileData.isEnd)
+                    continue;
+
+                map[tile.index].tileData.room = extraRoom;
+                map[tile.index].tileData.leftPassage = true;
+                map[tile.index -1].tileData.rightPassage = true;
+            }
+
+            //check up 
+            //set connection if avaliable 
+            if (map[tile.index].tileData.position.y + tileHeight <= 48)
+            {
+                if (map[tile.index + 4].tileData.isStart && map[tile.index + 4].tileData.isEnd)
+                    continue;
+                
+                map[tile.index].tileData.room = extraRoom;
+                map[tile.index].tileData.upPassage = true;
+                map[tile.index + 4].tileData.downPassage = true; 
+            }
+
+            //check right
+            //set connection if avaliable 
+            if (map[tile.index].tileData.position.x + tileWidth <= 48)
+            {
+                if (map[tile.index + 1].tileData.isStart && map[tile.index + 1].tileData.isEnd)
+                    continue;
+                
+                map[tile.index].tileData.room = extraRoom;
+                map[tile.index].tileData.rightPassage = true;
+                map[tile.index + 1].tileData.leftPassage = true;
+            }
+
+            //check down
+            //set connection if avaliable 
+            if (0 <= map[tile.index].tileData.position.y - tileHeight)
+            {
+                if (map[tile.index - 4].tileData.isStart && map[tile.index - 4].tileData.isEnd)
+                    continue;
+                
+                map[tile.index].tileData.room = extraRoom;
+                map[tile.index].tileData.downPassage = true;
+                map[tile.index - 4].tileData.upPassage = true;
+
+            }
+        }
     }
 
     private void BlockNonPassages()
