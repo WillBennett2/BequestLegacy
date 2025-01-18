@@ -13,6 +13,9 @@ public class MapGen : MonoBehaviour
     [SerializeField] private GameObject extraRoom;
     [SerializeField] private GameObject DoorTest;
 
+    private GameObject dungeonContainer;
+    private GameObject blockerContainer;
+    private GameObject roomContainer;
 
     [SerializeField] private int mapWidth;
     [SerializeField] private int mapHeight;
@@ -25,23 +28,16 @@ public class MapGen : MonoBehaviour
 
     private void Start()
     {
+        dungeonContainer = new GameObject("DungeonContainer");
+        blockerContainer = new GameObject("BlockerContainer");
+        blockerContainer.transform.SetParent(dungeonContainer.transform);
+        roomContainer = new GameObject("RoomContainer");
+        roomContainer.transform.SetParent(dungeonContainer.transform);
+
         GenerateMap();
     }
     public void GenerateMap()
     {
-        /*generation steps
-        
-        initialise a tile
-        create map with tiles
-
-        create a solution path
-
-        Fill in solution path
-
-        Fill rest of dungeon
-
-
-        */
         InitialiseMap();
         CreatePath();
         PlaceExtraRooms();
@@ -131,13 +127,11 @@ public class MapGen : MonoBehaviour
             }
             if(tempCurrentIndex==currentIndex)
             {
-                map[tempCurrentIndex].tileData.isEnd = false;
+                map[tempCurrentIndex].tileData.isEnd = true;
+
                 pathFound = true;
             }
         }
-
-
-        // place end-
     }
     private List<int> ShuffleList(List<int> options)
     {
@@ -185,7 +179,7 @@ public class MapGen : MonoBehaviour
     {
         foreach (Index2TileData tile in map)
         {
-            Instantiate(tile.tileData.room, tile.tileData.position, Quaternion.identity);
+            Instantiate(tile.tileData.room, tile.tileData.position, Quaternion.identity, roomContainer.transform);
         }
     }
 
@@ -250,7 +244,7 @@ public class MapGen : MonoBehaviour
             //set connection if avaliable 
             if(0 <= map[tile.index].tileData.position.x - tileWidth)
             {
-                if (map[tile.index - 1].tileData.isStart && map[tile.index - 1].tileData.isEnd)
+                if (map[tile.index - 1].tileData.isStart || map[tile.index - 1].tileData.isEnd || !map[tile.index - 1].tileData.isUsed)
                     continue;
 
                 map[tile.index].tileData.room = extraRoom;
@@ -262,7 +256,7 @@ public class MapGen : MonoBehaviour
             //set connection if avaliable 
             if (map[tile.index].tileData.position.y + tileHeight <= 48)
             {
-                if (map[tile.index + 4].tileData.isStart && map[tile.index + 4].tileData.isEnd)
+                if (map[tile.index + 4].tileData.isStart || map[tile.index + 4].tileData.isEnd || !map[tile.index + 4].tileData.isUsed)
                     continue;
                 
                 map[tile.index].tileData.room = extraRoom;
@@ -274,7 +268,7 @@ public class MapGen : MonoBehaviour
             //set connection if avaliable 
             if (map[tile.index].tileData.position.x + tileWidth <= 48)
             {
-                if (map[tile.index + 1].tileData.isStart && map[tile.index + 1].tileData.isEnd)
+                if (map[tile.index + 1].tileData.isStart || map[tile.index + 1].tileData.isEnd || !map[tile.index + 1].tileData.isUsed)
                     continue;
                 
                 map[tile.index].tileData.room = extraRoom;
@@ -286,7 +280,7 @@ public class MapGen : MonoBehaviour
             //set connection if avaliable 
             if (0 <= map[tile.index].tileData.position.y - tileHeight)
             {
-                if (map[tile.index - 4].tileData.isStart && map[tile.index - 4].tileData.isEnd)
+                if (map[tile.index - 4].tileData.isStart || map[tile.index - 4].tileData.isEnd || !map[tile.index - 4].tileData.isUsed)
                     continue;
                 
                 map[tile.index].tileData.room = extraRoom;
@@ -303,20 +297,20 @@ public class MapGen : MonoBehaviour
         {
             if(!Tile.tileData.upPassage)
             {
-                Instantiate(DoorTest, new Vector2( Tile.tileData.position.x, Tile.tileData.position.y+ 7.20f), DoorTest.transform.rotation);
+                Instantiate(DoorTest, new Vector2( Tile.tileData.position.x, Tile.tileData.position.y+ 7.20f), DoorTest.transform.rotation, blockerContainer.transform);
                
             }
             if (!Tile.tileData.rightPassage)
             {
-                Instantiate(DoorTest, new Vector2(Tile.tileData.position.x + 7.20f, Tile.tileData.position.y), Quaternion.Euler(DoorTest.transform.rotation.x, DoorTest.transform.rotation.y, DoorTest.transform.rotation.z));
+                Instantiate(DoorTest, new Vector2(Tile.tileData.position.x + 7.20f, Tile.tileData.position.y), Quaternion.Euler(DoorTest.transform.rotation.x, DoorTest.transform.rotation.y, DoorTest.transform.rotation.z), blockerContainer.transform);
             }
             if (!Tile.tileData.downPassage)
             {
-                Instantiate(DoorTest, new Vector2(Tile.tileData.position.x, Tile.tileData.position.y - 7.20f), DoorTest.transform.rotation);
+                Instantiate(DoorTest, new Vector2(Tile.tileData.position.x, Tile.tileData.position.y - 7.20f), DoorTest.transform.rotation, blockerContainer.transform);
             }
             if (!Tile.tileData.leftPassage)
             {
-                Instantiate(DoorTest, new Vector2(Tile.tileData.position.x - 7.20f, Tile.tileData.position.y), Quaternion.Euler( DoorTest.transform.rotation.x, DoorTest.transform.rotation.y, DoorTest.transform.rotation.z));
+                Instantiate(DoorTest, new Vector2(Tile.tileData.position.x - 7.20f, Tile.tileData.position.y), Quaternion.Euler( DoorTest.transform.rotation.x, DoorTest.transform.rotation.y, DoorTest.transform.rotation.z), blockerContainer.transform);
             }
         }
     }
