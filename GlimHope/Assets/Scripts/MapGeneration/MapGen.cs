@@ -277,8 +277,8 @@ public class MapGen : MonoBehaviour
         List<Index2TileData> pickedSpace = ShuffleList(freeConnectedSpace);
 
         //b = a != null ? a : b;
-        numOfExtraRooms = pickedSpace.Count < numOfExtraRooms ? pickedSpace.Count : numOfExtraRooms;
-        for (int i = 0; i < numOfExtraRooms; i++)
+        int maxExtraRooms = pickedSpace.Count < numOfExtraRooms ? pickedSpace.Count : numOfExtraRooms;
+        for (int i = 0; i < maxExtraRooms; i++)
         {
             bool assignRoom = false;
             if (0 <= map[pickedSpace[i].index].tileData.position.x - tileWidth)            //check left
