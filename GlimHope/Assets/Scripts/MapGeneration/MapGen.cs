@@ -16,11 +16,7 @@ public class MapGen : MonoBehaviour
     [SerializeField][Tooltip("This value will reduce to the maximum number of viable extra rooms on runtime")] int numOfExtraRooms = 2;
 
     [Header("Gameobject")]
-    [SerializeField] private RoomTypesSO roomTypes;
-    //[SerializeField] private GameObject roomTest;
-    //[SerializeField] private GameObject pathRoom;
-    //[SerializeField] private GameObject extraRoom;
-    //[SerializeField] private GameObject doorTest;
+    [SerializeField] private RoomTypesSO roomData;
 
     private GameObject dungeonContainer;
     private GameObject blockerContainer;
@@ -282,12 +278,10 @@ public class MapGen : MonoBehaviour
 
         //b = a != null ? a : b;
         numOfExtraRooms = pickedSpace.Count < numOfExtraRooms ? pickedSpace.Count : numOfExtraRooms;
-        bool assignRoom = false;
         for (int i = 0; i < numOfExtraRooms; i++)
         {
-            //check left
-            //set connection if avaliable 
-            if(0 <= map[pickedSpace[i].index].tileData.position.x - tileWidth)
+            bool assignRoom = false;
+            if (0 <= map[pickedSpace[i].index].tileData.position.x - tileWidth)            //check left
             {
                 if (!map[pickedSpace[i].index - 1].tileData.isStart && !map[pickedSpace[i].index - 1].tileData.isEnd && map[pickedSpace[i].index - 1].tileData.isUsed)
                 {
@@ -298,9 +292,7 @@ public class MapGen : MonoBehaviour
                 }
             }
 
-            //check up 
-            //set connection if avaliable 
-            if (map[pickedSpace[i].index].tileData.position.y + tileHeight <= tileHeight * (mapHeight - 1))
+            if (map[pickedSpace[i].index].tileData.position.y + tileHeight <= tileHeight * (mapHeight - 1))            //check up 
             {
                 if (!map[pickedSpace[i].index + mapHeight].tileData.isStart && !map[pickedSpace[i].index + mapHeight].tileData.isEnd && map[pickedSpace[i].index + mapHeight].tileData.isUsed)
                 {
@@ -312,9 +304,7 @@ public class MapGen : MonoBehaviour
                 }
             }
 
-            //check right
-            //set connection if avaliable 
-            if (map[pickedSpace[i].index].tileData.position.x + tileWidth <= tileWidth * (mapWidth - 1))
+            if (map[pickedSpace[i].index].tileData.position.x + tileWidth <= tileWidth * (mapWidth - 1))            //check right
             {
                 if (!map[pickedSpace[i].index + 1].tileData.isStart && !map[pickedSpace[i].index + 1].tileData.isEnd && map[pickedSpace[i].index + 1].tileData.isUsed)
                  {
@@ -327,9 +317,7 @@ public class MapGen : MonoBehaviour
                 
             }
 
-            //check down
-            //set connection if avaliable 
-            if (0 <= map[pickedSpace[i].index].tileData.position.y - tileHeight)
+            if (0 <= map[pickedSpace[i].index].tileData.position.y - tileHeight)            //check down
             {
                 if (!map[pickedSpace[i].index - mapHeight].tileData.isStart && !map[pickedSpace[i].index - mapHeight].tileData.isEnd && map[pickedSpace[i].index - mapHeight].tileData.isUsed)
                  {
@@ -375,31 +363,31 @@ public class MapGen : MonoBehaviour
     #region weighted room assignment
     private GameObject GetDefaultRoomType()
     {
-        return roomTypes.roomTypes.blankRooms[0].room;
+        return roomData.roomTypes.blankRooms[0].room;
     }
 
     private GameObject GetPathRoomType()
     {
-        return WeightedChoice(roomTypes.roomTypes.pathRooms);
+        return WeightedChoice(roomData.roomTypes.pathRooms);
     }
 
     private GameObject GetExtraRoomType()
     {
-        return WeightedChoice(roomTypes.roomTypes.extraRooms);
+        return WeightedChoice(roomData.roomTypes.extraRooms);
     }
 
     private GameObject GetWall()
     {
-       return roomTypes.roomTypes.wallType;
+       return roomData.roomTypes.wallType;
     }
 
     private GameObject GetStartType()
     {
-        return WeightedChoice(roomTypes.roomTypes.startRooms);
+        return WeightedChoice(roomData.roomTypes.startRooms);
     }
     private GameObject GetEndType()
     {
-        return WeightedChoice(roomTypes.roomTypes.endRooms);
+        return WeightedChoice(roomData.roomTypes.endRooms);
     }
 
     private GameObject WeightedChoice(List<RoomTypesSO.RoomData> entries)
