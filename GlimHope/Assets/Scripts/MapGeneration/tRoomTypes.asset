@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e39b82acde990ab49af2bb0ac1bf65bb, type: 3}
+  m_Name: tRoomTypes
+  m_EditorClassIdentifier: 
+  roomTypes:
+    pathRooms:
+    - spawnWeight: 70
+      room: {fileID: 8207917252838938902, guid: 770990af7bcbfda48a9f1384bd70dec8, type: 3}
+    - spawnWeight: 30
+      room: {fileID: 8207917252838938902, guid: 62d1ddf8580a7684ea87880b4094e5fd, type: 3}
+    extraRooms:
+    - spawnWeight: 100
+      room: {fileID: 8207917252838938902, guid: 4584e0ea5a0d5e04faaccbdf2c09359e, type: 3}
+    startRooms:
+    - spawnWeight: 100
+      room: {fileID: 8207917252838938902, guid: ea7770c2f9083f0479cee09945b6f84e, type: 3}
+    endRooms:
+    - spawnWeight: 100
+      room: {fileID: 8207917252838938902, guid: ebab384fbf2cc504aa2628b65a97dc42, type: 3}
+    blankRooms:
+    - spawnWeight: 100
+      room: {fileID: 8207917252838938902, guid: 54bd2065c3051a941bcdba38039d82b5, type: 3}
+    wallType: {fileID: 658221293075231161, guid: f86cf305a92834844a7c62e30d1905f0, type: 3}
+    doorTypes:
+    - spawnWeight: 100
+      room: {fileID: 658221293075231161, guid: f86cf305a92834844a7c62e30d1905f0, type: 3}
