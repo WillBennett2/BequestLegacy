@@ -14,6 +14,8 @@ public class MapGen : MonoBehaviour
     [SerializeField] private int mapWidth;
     [SerializeField] private int mapHeight;
     [SerializeField][Tooltip("This value will reduce to the maximum number of viable extra rooms on runtime")] int numOfExtraRooms = 2;
+    [SerializeField] private int minPathSize = 5;
+    [SerializeField] private int maxPathSize = 13;
 
     [Header("Gameobject")]
     [SerializeField] private RoomTypesSO roomData;
@@ -71,6 +73,7 @@ public class MapGen : MonoBehaviour
 
     public void GenerateMap()
     {
+
         ResetLastGeneration();
         CreateHolders();
         InitialiseMap();
@@ -78,6 +81,12 @@ public class MapGen : MonoBehaviour
         PlaceExtraRooms();
         BlockNonPassages();
         CreateVisual();
+
+        if(path.Count<minPathSize || path.Count > maxPathSize)
+        {
+            Debug.Log("Dungeon was too extreme");
+            GenerateMap();
+        }
     }
 
     private bool CheckPastPath(int newPathIndex)
