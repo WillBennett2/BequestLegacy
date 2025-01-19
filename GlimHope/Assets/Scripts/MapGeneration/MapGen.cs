@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine.Tilemaps;
 using static MapData;
 using UnityEditor.Experimental.GraphView;
+using System.Collections;
+using System.Linq;
 
 public class MapGen : MonoBehaviour
 {
@@ -11,13 +13,14 @@ public class MapGen : MonoBehaviour
     [SerializeField] private int tileHeight;
     [SerializeField] private int mapWidth;
     [SerializeField] private int mapHeight;
-    [SerializeField] int numOfExtraRooms = 2;
+    [SerializeField][Tooltip("This value will reduce to the maximum number of viable extra rooms on runtime")] int numOfExtraRooms = 2;
 
     [Header("Gameobject")]
-    [SerializeField] private GameObject roomTest;
-    [SerializeField] private GameObject pathRoom;
-    [SerializeField] private GameObject extraRoom;
-    [SerializeField] private GameObject DoorTest;
+    [SerializeField] private RoomTypesSO roomTypes;
+    //[SerializeField] private GameObject roomTest;
+    //[SerializeField] private GameObject pathRoom;
+    //[SerializeField] private GameObject extraRoom;
+    //[SerializeField] private GameObject doorTest;
 
     private GameObject dungeonContainer;
     private GameObject blockerContainer;
@@ -32,16 +35,48 @@ public class MapGen : MonoBehaviour
 
     private void Start()
     {
+        GenerateMap();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            GenerateMap();
+        }
+    }
+
+    private void CreateHolders()
+    {
         dungeonContainer = new GameObject("DungeonContainer");
         blockerContainer = new GameObject("BlockerContainer");
         blockerContainer.transform.SetParent(dungeonContainer.transform);
         roomContainer = new GameObject("RoomContainer");
         roomContainer.transform.SetParent(dungeonContainer.transform);
-
-        GenerateMap();
     }
+
+    private void ResetLastGeneration()
+    {
+        if (dungeonContainer != null)
+        {
+            Destroy(blockerContainer);
+            Destroy(roomContainer);
+            Destroy(dungeonContainer);
+        }
+
+        dungeonContainer = null;
+        blockerContainer = null;
+        roomContainer = null;
+
+        map.Clear();
+        path.Clear();
+
+    } 
+
     public void GenerateMap()
     {
+        ResetLastGeneration();
+        CreateHolders();
         InitialiseMap();
         CreatePath();
         PlaceExtraRooms();
@@ -69,10 +104,8 @@ public class MapGen : MonoBehaviour
         int currentIndex = Random.Range(0, mapWidth);
         path.Add(currentIndex);
         map[currentIndex].tileData.isStart = true;
+        map[currentIndex].tileData.room = GetStartType();
         map[currentIndex].tileData.isUsed = true;
-
-        if (showPath )
-            map[currentIndex].tileData.room = pathRoom;
 
         bool pathFound=false;
         List<int> options = new List<int> { 0, 1, 2 };
@@ -123,15 +156,15 @@ public class MapGen : MonoBehaviour
 
                     path.Add(currentIndex);
                     map[currentIndex].tileData.isUsed = true;
-                    //map[tempCurrentIndex].tile.nextIndex = currentIndex;
                     if (showPath)
-                        map[currentIndex].tileData.room = pathRoom;
+                        map[currentIndex].tileData.room = GetPathRoomType();
                     break;
                 }
             }
             if(tempCurrentIndex==currentIndex)
             {
                 map[tempCurrentIndex].tileData.isEnd = true;
+                map[tempCurrentIndex].tileData.room = GetEndType();
 
                 pathFound = true;
             }
@@ -170,7 +203,7 @@ public class MapGen : MonoBehaviour
 
     private void InitialiseTile(int index, Vector2 position)
     {
-        map.Add(mapData.InitialiseData(index,tileWidth, tileHeight,position,roomTest));
+        map.Add(mapData.InitialiseData(index,tileWidth, tileHeight,position, GetDefaultRoomType()));
     }
     private void InitialiseMap() // creates the map from how many tiles and their data
     {
@@ -249,6 +282,7 @@ public class MapGen : MonoBehaviour
 
         //b = a != null ? a : b;
         numOfExtraRooms = pickedSpace.Count < numOfExtraRooms ? pickedSpace.Count : numOfExtraRooms;
+        bool assignRoom = false;
         for (int i = 0; i < numOfExtraRooms; i++)
         {
             //check left
@@ -257,7 +291,7 @@ public class MapGen : MonoBehaviour
             {
                 if (!map[pickedSpace[i].index - 1].tileData.isStart && !map[pickedSpace[i].index - 1].tileData.isEnd && map[pickedSpace[i].index - 1].tileData.isUsed)
                 {
-                    map[pickedSpace[i].index].tileData.room = extraRoom;
+                    assignRoom = true;
                     map[pickedSpace[i].index].tileData.isUsed = true;
                     map[pickedSpace[i].index].tileData.leftPassage = true;
                     map[pickedSpace[i].index - 1].tileData.rightPassage = true;
@@ -271,7 +305,7 @@ public class MapGen : MonoBehaviour
                 if (!map[pickedSpace[i].index + mapHeight].tileData.isStart && !map[pickedSpace[i].index + mapHeight].tileData.isEnd && map[pickedSpace[i].index + mapHeight].tileData.isUsed)
                 {
 
-                    map[pickedSpace[i].index].tileData.room = extraRoom;
+                    assignRoom = true;
                     map[pickedSpace[i].index].tileData.isUsed = true;
                     map[pickedSpace[i].index].tileData.upPassage = true;
                     map[pickedSpace[i].index + mapHeight].tileData.downPassage = true;
@@ -285,7 +319,7 @@ public class MapGen : MonoBehaviour
                 if (!map[pickedSpace[i].index + 1].tileData.isStart && !map[pickedSpace[i].index + 1].tileData.isEnd && map[pickedSpace[i].index + 1].tileData.isUsed)
                  {
 
-                    map[pickedSpace[i].index].tileData.room = extraRoom;
+                    assignRoom = true;
                     map[pickedSpace[i].index].tileData.isUsed = true;
                     map[pickedSpace[i].index].tileData.rightPassage = true;
                     map[pickedSpace[i].index + 1].tileData.leftPassage = true;
@@ -299,40 +333,91 @@ public class MapGen : MonoBehaviour
             {
                 if (!map[pickedSpace[i].index - mapHeight].tileData.isStart && !map[pickedSpace[i].index - mapHeight].tileData.isEnd && map[pickedSpace[i].index - mapHeight].tileData.isUsed)
                  {
-                    map[pickedSpace[i].index].tileData.room = extraRoom;
+                    assignRoom = true;
                     map[pickedSpace[i].index].tileData.isUsed = true;
                     map[pickedSpace[i].index].tileData.downPassage = true;
                     map[pickedSpace[i].index - mapHeight].tileData.upPassage = true;
                 }
-                
+            }
 
-
+            if(assignRoom)
+            {
+                map[pickedSpace[i].index].tileData.room = GetExtraRoomType();
             }
         }
     }
 
     private void BlockNonPassages()
     {
+        GameObject wall = GetWall();
         foreach (Index2TileData Tile in map)
         {
             if(!Tile.tileData.upPassage)
             {
-                Instantiate(DoorTest, new Vector2( Tile.tileData.position.x, Tile.tileData.position.y+ 7.20f), DoorTest.transform.rotation, blockerContainer.transform);
+                Instantiate(wall, new Vector2( Tile.tileData.position.x, Tile.tileData.position.y+ 7.20f), wall.transform.rotation, blockerContainer.transform);
                
             }
             if (!Tile.tileData.rightPassage)
             {
-                Instantiate(DoorTest, new Vector2(Tile.tileData.position.x + 7.20f, Tile.tileData.position.y), Quaternion.Euler(DoorTest.transform.rotation.x, DoorTest.transform.rotation.y, DoorTest.transform.rotation.z), blockerContainer.transform);
+                Instantiate(wall, new Vector2(Tile.tileData.position.x + 7.20f, Tile.tileData.position.y), Quaternion.Euler(wall.transform.rotation.x, wall.transform.rotation.y, wall.transform.rotation.z), blockerContainer.transform);
             }
             if (!Tile.tileData.downPassage)
             {
-                Instantiate(DoorTest, new Vector2(Tile.tileData.position.x, Tile.tileData.position.y - 7.20f), DoorTest.transform.rotation, blockerContainer.transform);
+                Instantiate(wall, new Vector2(Tile.tileData.position.x, Tile.tileData.position.y - 7.20f), wall.transform.rotation, blockerContainer.transform);
             }
             if (!Tile.tileData.leftPassage)
             {
-                Instantiate(DoorTest, new Vector2(Tile.tileData.position.x - 7.20f, Tile.tileData.position.y), Quaternion.Euler( DoorTest.transform.rotation.x, DoorTest.transform.rotation.y, DoorTest.transform.rotation.z), blockerContainer.transform);
+                Instantiate(wall, new Vector2(Tile.tileData.position.x - 7.20f, Tile.tileData.position.y), Quaternion.Euler(wall.transform.rotation.x, wall.transform.rotation.y, wall.transform.rotation.z), blockerContainer.transform);
             }
         }
     }
 
+    #region weighted room assignment
+    private GameObject GetDefaultRoomType()
+    {
+        return roomTypes.roomTypes.blankRooms[0].room;
+    }
+
+    private GameObject GetPathRoomType()
+    {
+        return WeightedChoice(roomTypes.roomTypes.pathRooms);
+    }
+
+    private GameObject GetExtraRoomType()
+    {
+        return WeightedChoice(roomTypes.roomTypes.extraRooms);
+    }
+
+    private GameObject GetWall()
+    {
+       return roomTypes.roomTypes.wallType;
+    }
+
+    private GameObject GetStartType()
+    {
+        return WeightedChoice(roomTypes.roomTypes.startRooms);
+    }
+    private GameObject GetEndType()
+    {
+        return WeightedChoice(roomTypes.roomTypes.endRooms);
+    }
+
+    private GameObject WeightedChoice(List<RoomTypesSO.RoomData> entries)
+    {
+        int totalWeight = entries.Sum(x => x.spawnWeight);
+        int wantedWeight = Random.Range(0, totalWeight);
+        int currentWeight = 0;
+
+        foreach (RoomTypesSO.RoomData entry in entries)
+        {
+            currentWeight += entry.spawnWeight;
+            if (currentWeight >= wantedWeight)
+            {
+                return entry.room;
+            }
+        }
+
+        return null;
+    }
+    #endregion
 }
