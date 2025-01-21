@@ -1,4 +1,5 @@
 using Assets.Scripts;
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -10,6 +11,10 @@ public class PlayerController : MonoBehaviour
     private Vector2 input;
 
     private Skills skill1;
+    private Skills skill2;
+
+    [SerializeField] private float maxHealth = 500.0f;
+    private float currentHealth;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -17,6 +22,10 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
 
         skill1 = GetComponent<Flamethrower>();
+        skill2 = GetComponent<Fireball>();
+
+        currentHealth = GetMaxHealth();
+        Debug.Log("health: " + currentHealth);
     }
 
     // Update is called once per frame
@@ -48,6 +57,21 @@ public class PlayerController : MonoBehaviour
         {
             skill1.Cast(transform.position, transform.rotation);
         }
+        else if (Input.GetKeyDown(KeyCode.E))
+        {
+            skill2.Cast(transform.position, transform.rotation);
+        }
+        #endregion
+
+        #region tick damage
+        currentHealth -= Time.deltaTime;
+        #endregion
+
+        #region dead
+        if (currentHealth < 0)
+        {
+            Dead();
+        }
         #endregion
     }
 
@@ -59,5 +83,21 @@ public class PlayerController : MonoBehaviour
     private void Attack()
     {
         // Wick Attack Here
+    }
+
+    public float GetMaxHealth()
+    {
+        return maxHealth;
+    }
+
+    public void TakeDamage(float damage)
+    {
+        currentHealth -= damage;
+        Debug.Log("health: " + currentHealth);
+    }
+
+    private void Dead()
+    {
+        //death here
     }
 }

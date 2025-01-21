@@ -224,6 +224,7 @@ GameObject:
   - component: {fileID: 2124213473}
   - component: {fileID: 2124213472}
   - component: {fileID: 2124213476}
+  - component: {fileID: 2124213477}
   m_Layer: 0
   m_Name: Square
   m_TagString: Player
@@ -244,6 +245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
+  maxHealth: 500
 --- !u!50 &2124213473
 Rigidbody2D:
   serializedVersion: 5
@@ -357,8 +359,29 @@ MonoBehaviour:
   damage: 0
   attackSpeed: 0
   lifeTime: 0
+  cost: 0
   skillPrefab: {fileID: 4097334363454823802, guid: 57f3eccb480c955409a7ba1403511caf, type: 3}
   offset: 2
+--- !u!114 &2124213477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2124213471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29837638f8c3c9f49bf82ee6d2c75fb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  position: {x: 0, y: 0}
+  damage: 0
+  attackSpeed: 0
+  lifeTime: 0.5
+  cost: 0
+  skillPrefab: {fileID: 8375035176081977496, guid: 1c64dc9aa698ade48a66604762b94a11, type: 3}
+  flySpeed: 1000
+  offset: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
