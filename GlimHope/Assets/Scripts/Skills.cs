@@ -11,9 +11,10 @@ namespace Assets.Scripts
     {
         public Vector2 position;
 
-        public float damage;
-        public float attackSpeed;
-        public float lifeTime;
+        [SerializeField] private float damage;
+        [SerializeField] private float attackSpeed;
+        [SerializeField] private float lifeTime;
+        [SerializeField] private float cost;
 
         public GameObject skillPrefab;
 
@@ -26,5 +27,23 @@ namespace Assets.Scripts
         }
 
         public abstract void Cast(Vector2 currentPosition, Quaternion currentRotation);
+
+        public void AddLifeTime(float inputTime)
+        {
+            lifeTime += inputTime;
+        }
+
+        public float GetLifeTime() { return lifeTime; }
+
+        public void SetCost(float inputCost) { cost = inputCost; }
+        public float GetCost() { return cost; }
+
+        public void SetDamage(float inputdamage) { damage = inputdamage; }
+        public float GetDamage() { return damage; }
+
+        public void DealDamage(GameObject target,  float damage)
+        {
+            target.SendMessage("TakeDamage", damage);
+        }
     }
 }
