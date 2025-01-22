@@ -122,7 +122,7 @@ public class MapGen : MonoBehaviour
         CreateHolders();
         InitialiseMap();
         CreatePath(directionMap, destinationMap, mapTypes, mapVariation);
-        PlaceExtraRooms();
+        //PlaceExtraRooms();
         BlockNonPassages();
         CreateVisual();
     }
@@ -160,29 +160,18 @@ public class MapGen : MonoBehaviour
     }
     private void LoadAssignPath(int currentIndex, List<int> options, List<int> destinationMap, List<int> mapTypes, List<int> mapVariation, bool shuffle)
     {
-        bool pathFound = false;
-        bool skipCheck = false;
-        bool endFound = false;
-
-        skipCheck = false;
-        int tempCurrentIndex = currentIndex;
-
-        Debug.Log(options.Count);
-
-
         for (int i = 0; i < options.Count; i++)
         {
-            Debug.Log("Coming from "+options[i]+" Going to " + destinationMap[i]);
             //set the 
             switch (options[i])
             {
                 case 1: // came from left
                     map[i].tileData.rightPassage = true;
-                    map[i].tileData.origin = i-1;
+                    map[i].tileData.origin = i+1;
                     break;
                 case 2:// came from right
                     map[i].tileData.leftPassage = true;
-                    map[i].tileData.origin = i+1;
+                    map[i].tileData.origin = i-1;
                     break;
                 case 3: // came from below
                     map[i].tileData.downPassage = true;
@@ -194,11 +183,11 @@ public class MapGen : MonoBehaviour
             switch (destinationMap[i])
             {
                 case 1: // went left
-                    map[i].tileData.leftPassage = true;
+                    map[i].tileData.rightPassage = true;
                     map[i].tileData.destination = i-1;
                     break;
                 case 2:// went right
-                    map[i].tileData.rightPassage = true;
+                    map[i].tileData.leftPassage = true;
                     map[i].tileData.destination = i+1;
                     break;
                 case 3: // went up
@@ -209,111 +198,57 @@ public class MapGen : MonoBehaviour
                     break;
             }
 
-            path.Add(i);
-            map[i].tileData.isUsed = true;
-            map[i].tileData.isSolution = true;
-            map[i].tileData.roomType = mapTypes[i];
-            map[i].tileData.roomVariation = mapVariation[i];
+            if (mapTypes[i] != 0)
+            {
+                path.Add(i);
+                map[i].tileData.isUsed = true;
+                map[i].tileData.isSolution = true;
+                map[i].tileData.roomType = mapTypes[i];
+                map[i].tileData.roomVariation = mapVariation[i];
+            }
         }
-
-
-
-
-        //foreach (int move in options)
-        //for (int i = 0; i < options.Count; i++) 
-        //{
-        //    Debug.Log(options[i]);
-        //    bool validMove = false;
-
-        //    switch (options[i])
-        //    {
-        //        case 1:// left
-        //            if (0 <= map[tempCurrentIndex].tileData.position.x - tileWidth )//&& CheckPastPath(currentIndex - 1))
-        //            {
-        //                //set previous movement
-        //                map[currentIndex].tileData.leftPassage = true;
-        //                currentIndex = map[currentIndex].index + GetDirection(destinationMap[i]);
-        //                map[currentIndex].tileData.rightPassage = true;
-                        
-        //                validMove = true;
-        //            }
-
-        //            break;
-        //        case 2: //right
-        //            if (map[tempCurrentIndex].tileData.position.x + tileWidth <= tileWidth * (mapWidth - 1))// && CheckPastPath(currentIndex + 1))
-        //            {
-        //                map[currentIndex].tileData.rightPassage = true;
-        //                currentIndex = map[currentIndex].index + GetDirection(destinationMap[i]);
-        //                map[currentIndex].tileData.leftPassage = true;
-        //                validMove = true;
-        //            }
-        //            break;
-
-        //        case 3: //up
-        //            if (map[tempCurrentIndex].tileData.position.y + tileHeight <= tileHeight * (mapHeight - 1))// && CheckPastPath(currentIndex + mapHeight))
-        //            {
-        //                map[currentIndex].tileData.upPassage = true;
-        //                currentIndex = map[currentIndex].index + GetDirection(destinationMap[i]);
-        //                map[currentIndex].tileData.downPassage = true;
-        //                validMove = true;
-        //            }
-        //            break;
-
-        //        case 5:
-        //            skipCheck = true;
-        //            break;
-
-        //        case 6:
-        //            skipCheck = true;
-        //            break;
-        //    }
-            
-        //    if (mapTypes[options[i]] == 4)
-        //    {
-        //        Debug.Log("Move =" + options[i]);
-        //        path.Add(currentIndex);
-        //        map[currentIndex].tileData.isUsed = true;
-        //        map[tempCurrentIndex].tileData.isSolution = true;
-        //        map[tempCurrentIndex].tileData.roomType = 4;
-        //        map[currentIndex].tileData.origin = tempCurrentIndex;
-        //        map[currentIndex].tileData.roomVariation = mapVariation[currentIndex];
-        //    }
-
-        //    if (validMove)
-        //    {
-        //        Debug.Log("Move =" + options[i]);
-        //        path.Add(currentIndex);
-        //        map[currentIndex].tileData.isUsed = true;
-        //        map[currentIndex].tileData.isSolution = true;
-        //        map[currentIndex].tileData.roomType = 1;
-
-
-        //        map[currentIndex].tileData.roomVariation = mapVariation[currentIndex];
-                
-
-        //        //break;
-        //    }
-        //}
-    }
-    private int GetDirection(int destination)
-    {
-        int value = 0;
-        switch (destination)
+        for (int i = 0; i < options.Count; i++) //placing extras
         {
-            case 1:
-                value = -1;
-                break;
-            case 2:
-                value = 1;
-                break;
-            case 3:
-                value = 4;
-                break;
-            default:
-                break;
-        }
+            if (mapTypes[i] == 2)
+            {
+                if (0<= i-1 && 0 <= map[i].tileData.position.x - tileWidth) //left
+                {
+                    if (map[i - 1].tileData.isUsed == true && map[i - 1].tileData.roomType != 3 && map[i - 1].tileData.roomType != 4)
+                    {
+                        map[i].tileData.leftPassage = true;
+                        map[i - 1].tileData.rightPassage = true;
+                    }
+                }
+                if (i+1 <= options.Count && map[i].tileData.position.x + tileWidth <= tileWidth * (mapWidth - 1)) //right
+                {
+                    if (map[i + 1].tileData.isUsed == true && map[i + 1].tileData.roomType != 3 && map[i + 1].tileData.roomType != 4)
+                    {
+                        map[i].tileData.rightPassage = true;
+                        map[i + 1].tileData.leftPassage = true;
+                    }
+                }
+                if (i+ mapHeight <= options.Count && map[i].tileData.position.y + tileHeight <= tileHeight * (mapHeight - 1)) //up
+                {
+                    if (map[i + mapHeight].tileData.isUsed == true && map[i + mapHeight].tileData.roomType != 3 && map[i + mapHeight].tileData.roomType != 4)
+                    {
+                        map[i].tileData.upPassage = true;
+                        map[i + mapHeight].tileData.downPassage = true;
+                    }
+                }
+                if (0 <= i - mapHeight && 0 <= map[i].tileData.position.y - tileHeight) //down
+                {
+                    if (map[i - mapHeight].tileData.isUsed == true && map[i - mapHeight].tileData.roomType != 3 && map[i - mapHeight].tileData.roomType != 4)
+                    {
+                        map[i].tileData.downPassage = true;
+                        map[i - mapHeight].tileData.upPassage = true;
+                    }
+                }
 
-        return value;
+                map[i].tileData.isUsed = true;
+                map[i].tileData.roomType = mapTypes[i];
+                map[i].tileData.roomVariation = mapVariation[i];
+            }
+        }
     }
 
     private void AssignPath(int currentIndex, List<int> options, List<int> mapVariation, bool shuffle)
@@ -388,7 +323,6 @@ public class MapGen : MonoBehaviour
                 }
                 if (validMove)
                 {
-                    Debug.Log("Move =" + move);
                     path.Add(currentIndex);
                     map[currentIndex].tileData.isUsed = true;
                     map[currentIndex].tileData.isSolution = true;
@@ -584,6 +518,7 @@ public class MapGen : MonoBehaviour
                     map[pickedSpace[i].index].tileData.isUsed = true;
                     map[pickedSpace[i].index].tileData.leftPassage = true;
                     map[pickedSpace[i].index - 1].tileData.rightPassage = true;
+                    //map[pickedSpace[i].index].tileData.origin = pickedSpace[i].index - 1;
                 }
             }
 
@@ -596,6 +531,7 @@ public class MapGen : MonoBehaviour
                     map[pickedSpace[i].index].tileData.isUsed = true;
                     map[pickedSpace[i].index].tileData.upPassage = true;
                     map[pickedSpace[i].index + mapHeight].tileData.downPassage = true;
+                    //map[pickedSpace[i].index].tileData.origin = pickedSpace[i].index + mapHeight;
                 }
             }
 
@@ -608,6 +544,7 @@ public class MapGen : MonoBehaviour
                     map[pickedSpace[i].index].tileData.isUsed = true;
                     map[pickedSpace[i].index].tileData.rightPassage = true;
                     map[pickedSpace[i].index + 1].tileData.leftPassage = true;
+                    //map[pickedSpace[i].index].tileData.origin = pickedSpace[i].index + 1;
                 }
                 
             }
@@ -620,6 +557,7 @@ public class MapGen : MonoBehaviour
                     map[pickedSpace[i].index].tileData.isUsed = true;
                     map[pickedSpace[i].index].tileData.downPassage = true;
                     map[pickedSpace[i].index - mapHeight].tileData.upPassage = true;
+                    //map[pickedSpace[i].index].tileData.origin = pickedSpace[i].index - mapHeight;
                 }
             }
 

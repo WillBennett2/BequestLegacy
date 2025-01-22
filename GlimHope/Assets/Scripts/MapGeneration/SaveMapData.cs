@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using static MapData;
 
@@ -20,6 +21,10 @@ public class SaveMapData
             //origin
             int movement = tile.index - tile.tileData.origin;
             int direction = 6;
+            if (tile.tileData.roomType == 2)
+            {
+                direction = 6;
+            }
             if(movement < 0) //left
             {
                 direction = 1;
@@ -46,7 +51,12 @@ public class SaveMapData
             }
             data = direction;
 
-            movement = tile.tileData.origin - tile.tileData.destination;
+            movement = tile.index - tile.tileData.destination;
+
+            if (tile.tileData.origin == 99)
+            {
+                movement = tile.index - tile.tileData.destination;
+            }
 
             direction = 6;
             if (movement < 0) //left
@@ -61,7 +71,7 @@ public class SaveMapData
             {
                 direction = 3;
             }
-            if (movement == -8|| movement == -4) // need to add a down case
+            if (movement == -8 || movement == -4) // need to add a down case
             {
                 direction = 3;
             }
