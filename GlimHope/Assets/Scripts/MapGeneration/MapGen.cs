@@ -34,30 +34,6 @@ public class MapGen : MonoBehaviour
     [SerializeField] private List<int> path;
     [SerializeField] private bool showPath;
 
-    //private SaveMapData saveMapData;
-    //private LoadMapData loadMapData;
-
-    private void Start()
-    {
-        GenerateMap();
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            GenerateMap();
-        }
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            ResetLastGeneration();
-            gameManager.LoadData();
-            //loadMapData.LoadMapLayout(saveMapData.mapData);
-            LoadMap(gameManager.GetLoadedData().directionMap, gameManager.GetLoadedData().destinationMap , gameManager.GetLoadedData().mapTypes, gameManager.GetLoadedData().mapVariation);
-            Debug.Log("Reloaded");
-        }
-    } 
-
     public void GenerateMap()
     {
 
@@ -75,6 +51,13 @@ public class MapGen : MonoBehaviour
             GenerateMap();
         }
         gameManager.SaveData(map);
+    }
+    public void LoadMap()
+    {
+        ResetLastGeneration();
+        gameManager.LoadData();
+        LoadMap(gameManager.GetLoadedData().directionMap, gameManager.GetLoadedData().destinationMap, gameManager.GetLoadedData().mapTypes, gameManager.GetLoadedData().mapVariation);
+        Debug.Log("Reloaded");
     }
     private void ResetLastGeneration()
     {

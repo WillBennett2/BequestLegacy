@@ -19,11 +19,6 @@ public class SaveLevelDataSO : ScriptableObject
     {
         List<int> tileData = new List<int>();
 
-        //int index = 0;
-        //if(0 < levelData.Count)
-        //    index = levelData.Count-1;
-
-        //Debug.Log(index);
         foreach (int tile in data)
         {
             tileData.Add(tile);
