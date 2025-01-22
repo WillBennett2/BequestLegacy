@@ -6,17 +6,11 @@ using static MapData;
 
 public class LoadMapData 
 {
-    [SerializeField] private RoomTypesSO roomData;
-
     public List<int> directionMap = new List<int>();
     public List<int> destinationMap = new List<int>();
     public List<int> mapTypes = new List<int>();
     public List<int> mapVariation = new List<int>();
 
-    public void SetVisualData(RoomTypesSO roomDataSO)
-    {
-        roomData = roomDataSO;
-    }
     public void LoadMapLayout(List<int> mapData)
     {
         directionMap.Clear();
@@ -43,7 +37,6 @@ public class LoadMapData
             mapVariation.Add(listOfInts[3]);
             //get type and assign variation based off that
         }
-        Debug.Log("Direction map count =" + directionMap.Count());
     }
 
 }
