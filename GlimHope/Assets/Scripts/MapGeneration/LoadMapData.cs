@@ -11,14 +11,14 @@ public class LoadMapData
     public List<int> mapTypes = new List<int>();
     public List<int> mapVariation = new List<int>();
 
-    public void LoadMapLayout(List<int> mapData)
+    public void LoadMapLayout(int level, List<SaveLevelDataSO.SaveDataInfo> mapData)
     {
         directionMap.Clear();
         destinationMap.Clear();
         mapTypes.Clear();
         mapVariation.Clear();
 
-        foreach (int data in mapData)
+        foreach (int data in mapData[level].data)
         {
 
             int num = data;

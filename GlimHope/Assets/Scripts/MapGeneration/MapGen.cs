@@ -9,6 +9,8 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class MapGen : MonoBehaviour
 {
+    [SerializeField] private GameManager gameManager;
+
     [Header("Sizes")]
     [SerializeField] private int tileWidth;
     [SerializeField] private int tileHeight;
@@ -32,13 +34,11 @@ public class MapGen : MonoBehaviour
     [SerializeField] private List<int> path;
     [SerializeField] private bool showPath;
 
-    private SaveMapData saveMapData;
-    private LoadMapData loadMapData;
+    //private SaveMapData saveMapData;
+    //private LoadMapData loadMapData;
 
     private void Start()
     {
-        loadMapData = new LoadMapData();
-        saveMapData = new SaveMapData();
         GenerateMap();
     }
 
@@ -51,8 +51,9 @@ public class MapGen : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.L))
         {
             ResetLastGeneration();
-            loadMapData.LoadMapLayout(saveMapData.mapData);
-            LoadMap(loadMapData.directionMap, loadMapData.destinationMap ,loadMapData.mapTypes, loadMapData.mapVariation);
+            gameManager.LoadData();
+            //loadMapData.LoadMapLayout(saveMapData.mapData);
+            LoadMap(gameManager.GetLoadedData().directionMap, gameManager.GetLoadedData().destinationMap , gameManager.GetLoadedData().mapTypes, gameManager.GetLoadedData().mapVariation);
             Debug.Log("Reloaded");
         }
     } 
@@ -73,8 +74,7 @@ public class MapGen : MonoBehaviour
             Debug.Log("Dungeon was too extreme");
             GenerateMap();
         }
-
-        saveMapData.SaveMapLayout(map);
+        gameManager.SaveData(map);
     }
     private void ResetLastGeneration()
     {
@@ -275,8 +275,6 @@ public class MapGen : MonoBehaviour
     {
         bool pathFound = false;
         bool skipCheck = false;
-
-
 
         //while (!pathFound)
         for (int i = 0; i < 16; i++)

@@ -7,7 +7,7 @@ using static MapData;
 
 public class SaveMapData
 {
-
+    SaveLevelDataSO SaveLevelDataSO;
     public List<int> mapData = new List<int>();
 
     public void SaveMapLayout(List<MapData.Index2TileData> map)
@@ -84,5 +84,11 @@ public class SaveMapData
         }
 
         Debug.Log("Layout saved");
+        SaveLevelDataSO.SaveData(mapData);
+    }
+
+    public void SetSaveDataSO(SaveLevelDataSO data)
+    {
+        SaveLevelDataSO = data;
     }
 }
