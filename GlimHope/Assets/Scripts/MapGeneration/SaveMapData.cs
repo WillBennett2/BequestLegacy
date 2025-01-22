@@ -18,7 +18,6 @@ public class SaveMapData
             int data = new int();
             data = 10;
 
-            //origin
             int movement = tile.index - tile.tileData.origin;
             int direction = 6;
             if (tile.tileData.roomType == 2)
@@ -33,11 +32,7 @@ public class SaveMapData
             {
                 direction = 2;
             }
-            if (movement == 4) // up
-            {
-                direction = 3;
-            }
-            if (movement==-4) // need to add a down case
+            if (movement == 4 || movement == -4) // up need to add a down case
             {
                 direction = 3;
             }
@@ -67,11 +62,7 @@ public class SaveMapData
             {
                 direction = 2;
             }
-            if (movement == 4) // up
-            {
-                direction = 3;
-            }
-            if (movement == -8 || movement == -4) // need to add a down case
+            if (movement == 4 || movement == -8 || movement == -4) //up need to add a down case
             {
                 direction = 3;
             }
@@ -90,8 +81,6 @@ public class SaveMapData
             //room variation
             data = (data * 10) + tile.tileData.roomVariation;
             mapData.Add(data);
-
-            Debug.Log("Tile " + tile.index + " is assigned value of " + data);
         }
 
         Debug.Log("Layout saved");

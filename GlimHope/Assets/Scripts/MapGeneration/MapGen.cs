@@ -38,7 +38,6 @@ public class MapGen : MonoBehaviour
     private void Start()
     {
         loadMapData = new LoadMapData();
-        loadMapData.SetVisualData(roomData);
         saveMapData = new SaveMapData();
         GenerateMap();
     }
@@ -56,32 +55,6 @@ public class MapGen : MonoBehaviour
             LoadMap(loadMapData.directionMap, loadMapData.destinationMap ,loadMapData.mapTypes, loadMapData.mapVariation);
             Debug.Log("Reloaded");
         }
-    }
-
-    private void CreateHolders()
-    {
-        dungeonContainer = new GameObject("DungeonContainer");
-        blockerContainer = new GameObject("BlockerContainer");
-        blockerContainer.transform.SetParent(dungeonContainer.transform);
-        roomContainer = new GameObject("RoomContainer");
-        roomContainer.transform.SetParent(dungeonContainer.transform);
-    }
-
-    private void ResetLastGeneration()
-    {
-        if (dungeonContainer != null)
-        {
-            Destroy(blockerContainer);
-            Destroy(roomContainer);
-            Destroy(dungeonContainer);
-        }
-
-        dungeonContainer = null;
-        blockerContainer = null;
-        roomContainer = null;
-
-        map.Clear();
-        path.Clear();
     } 
 
     public void GenerateMap()
@@ -103,7 +76,56 @@ public class MapGen : MonoBehaviour
 
         saveMapData.SaveMapLayout(map);
     }
+    private void ResetLastGeneration()
+    {
+        if (dungeonContainer != null)
+        {
+            Destroy(blockerContainer);
+            Destroy(roomContainer);
+            Destroy(dungeonContainer);
+        }
 
+        dungeonContainer = null;
+        blockerContainer = null;
+        roomContainer = null;
+
+        map.Clear();
+        path.Clear();
+    }
+
+    private void CreateHolders()
+    {
+        dungeonContainer = new GameObject("DungeonContainer");
+        blockerContainer = new GameObject("BlockerContainer");
+        blockerContainer.transform.SetParent(dungeonContainer.transform);
+        roomContainer = new GameObject("RoomContainer");
+        roomContainer.transform.SetParent(dungeonContainer.transform);
+    }
+    private void InitialiseTile(int index, Vector2 position)
+    {
+        map.Add(mapData.InitialiseData(index, tileWidth, tileHeight, position, 0, GetBlankRoomType()));
+    }
+    private void InitialiseMap() // creates the map from how many tiles and their data
+    {
+        mapData = new MapData();
+        mapData.mapWidth = mapWidth;
+        mapData.mapHeight = mapHeight;
+
+        int index = 0;
+        Vector2 position = new Vector2();
+        for (int y = 0; y < mapHeight; y++)
+        {
+            for (int x = 0; x < mapWidth; x++)
+            {
+                InitialiseTile(index, position);
+                index++;
+                position.x = position.x + tileWidth;
+            }
+            position.x = 0;
+            position.y = position.y + tileHeight;
+        }
+
+    }
     private bool CheckPastPath(int newPathIndex)
     {
         foreach (int pathIndex in path)
@@ -122,7 +144,6 @@ public class MapGen : MonoBehaviour
         CreateHolders();
         InitialiseMap();
         CreatePath(directionMap, destinationMap, mapTypes, mapVariation);
-        //PlaceExtraRooms();
         BlockNonPassages();
         CreateVisual();
     }
@@ -138,25 +159,12 @@ public class MapGen : MonoBehaviour
                 map[i].tileData.roomType = 3;
                 map[i].tileData.isUsed = true;
                 map[i].tileData.isSolution = true;
+                map[i].tileData.roomVariation = GetEndType();
             }
         }
 
         //save path into shuffled
         LoadAssignPath(path[0], directionMap, destinationMap, mapTypes, mapVariation, false);
-    }
-
-    private void CreatePath()
-    {
-        int currentIndex = Random.Range(0, mapWidth);
-        path.Add(currentIndex);
-        map[currentIndex].tileData.origin = 99;
-        map[currentIndex].tileData.roomType = 3;
-        //map[currentIndex].tileData.room = GetStartType();
-        map[currentIndex].tileData.isUsed = true;
-        map[currentIndex].tileData.isSolution = true;
-
-        List<int> options = new List<int> { 1, 2, 3 };
-        AssignPath(currentIndex,options, null,true);
     }
     private void LoadAssignPath(int currentIndex, List<int> options, List<int> destinationMap, List<int> mapTypes, List<int> mapVariation, bool shuffle)
     {
@@ -250,7 +258,19 @@ public class MapGen : MonoBehaviour
             }
         }
     }
+    private void CreatePath()
+    {
+        int currentIndex = Random.Range(0, mapWidth);
+        path.Add(currentIndex);
+        map[currentIndex].tileData.origin = 99;
+        map[currentIndex].tileData.roomType = 3;
+        map[currentIndex].tileData.roomVariation = GetEndType();
+        map[currentIndex].tileData.isUsed = true;
+        map[currentIndex].tileData.isSolution = true;
 
+        List<int> options = new List<int> { 1, 2, 3 };
+        AssignPath(currentIndex, options, null, true);
+    }
     private void AssignPath(int currentIndex, List<int> options, List<int> mapVariation, bool shuffle)
     {
         bool pathFound = false;
@@ -345,7 +365,6 @@ public class MapGen : MonoBehaviour
             if (tempCurrentIndex == currentIndex)
             {
                 map[tempCurrentIndex].tileData.roomType = 4;
-                //map[tempCurrentIndex].tileData.room = GetEndType();
                 map[tempCurrentIndex].tileData.destination = 99;
                 map[tempCurrentIndex].tileData.isSolution = true;
                 map[currentIndex].tileData.roomVariation = GetEndType();
@@ -358,77 +377,7 @@ public class MapGen : MonoBehaviour
             {
                 i = 16;
             }
-            //if (!skipCheck)
-            //{
-            //    if (tempCurrentIndex == currentIndex)
-            //    {
-            //        map[tempCurrentIndex].tileData.roomType = 4;
-            //        //map[tempCurrentIndex].tileData.room = GetEndType();
-            //        map[tempCurrentIndex].tileData.isSolution = true;
-            //        map[currentIndex].tileData.roomVariation = GetEndType();
-
-            //        //pathFound = true;
-            //        break;
-            //    }
-            //}
         }
-    }
-
-    private List<int> ShuffleList(List<int> options)
-    {
-        List<int> temp = new List<int>(options);
-        List<int> shuffled = new List<int>();
-
-
-        for (int i = 0; i < options.Count; i++)
-        {
-            int index = Random.Range(0, temp.Count);
-            shuffled.Add(temp[index]);
-            temp.Remove(temp[index]);
-        }
-
-        return shuffled;
-    }
-    private List<Index2TileData> ShuffleList(List<Index2TileData> options)
-    {
-        List<Index2TileData> temp = new List<Index2TileData>(options);
-        List<Index2TileData> shuffled = new List<Index2TileData>();
-
-
-        for (int i = 0; i < options.Count; i++)
-        {
-            int index = Random.Range(0, temp.Count);
-            shuffled.Add(temp[index]);
-            temp.Remove(temp[index]);
-        }
-
-        return shuffled;
-    }
-
-    private void InitialiseTile(int index, Vector2 position)
-    {
-        map.Add(mapData.InitialiseData(index,tileWidth, tileHeight,position, 0,GetBlankRoomType()));
-    }
-    private void InitialiseMap() // creates the map from how many tiles and their data
-    {
-        mapData = new MapData();
-        mapData.mapWidth = mapWidth;
-        mapData.mapHeight = mapHeight;
-
-        int index = 0;
-        Vector2 position = new Vector2();
-        for (int y = 0; y < mapHeight; y++)
-        {
-            for (int x = 0; x < mapWidth; x++)
-            {
-                InitialiseTile(index,position);
-                index++;
-                position.x = position.x + tileWidth;
-            }
-            position.x = 0;
-            position.y = position.y + tileHeight;
-        }
-        
     }
 
     private void CreateVisual()
@@ -594,7 +543,39 @@ public class MapGen : MonoBehaviour
         }
     }
 
-    #region weighted room assignment
+    #region Extra Utility
+    private List<int> ShuffleList(List<int> options)
+    {
+        List<int> temp = new List<int>(options);
+        List<int> shuffled = new List<int>();
+
+
+        for (int i = 0; i < options.Count; i++)
+        {
+            int index = Random.Range(0, temp.Count);
+            shuffled.Add(temp[index]);
+            temp.Remove(temp[index]);
+        }
+
+        return shuffled;
+    }
+    private List<Index2TileData> ShuffleList(List<Index2TileData> options)
+    {
+        List<Index2TileData> temp = new List<Index2TileData>(options);
+        List<Index2TileData> shuffled = new List<Index2TileData>();
+
+
+        for (int i = 0; i < options.Count; i++)
+        {
+            int index = Random.Range(0, temp.Count);
+            shuffled.Add(temp[index]);
+            temp.Remove(temp[index]);
+        }
+
+        return shuffled;
+    }
+
+
     private int GetBlankRoomType()
     {
         return WeightedChoice(roomData.roomTypes.blankRooms);
