@@ -10,11 +10,11 @@ public class RoomTypesSO : ScriptableObject
 
     [Serializable]public struct RoomTypes
     {
+        [SerializeField] public List<RoomData> blankRooms;
         [SerializeField] public List<RoomData> pathRooms;
         [SerializeField] public List<RoomData> extraRooms;
         [SerializeField] public List<RoomData> startRooms;
         [SerializeField] public List<RoomData> endRooms;
-        [SerializeField] public List<RoomData> blankRooms;
         [SerializeField] public List<RoomData> doorTypes;
         [SerializeField] public GameObject wallType;
     }

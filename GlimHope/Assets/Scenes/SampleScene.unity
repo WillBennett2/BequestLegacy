@@ -153,11 +153,9 @@ MonoBehaviour:
   mapWidth: 4
   mapHeight: 4
   numOfExtraRooms: 2
-  roomTypes: {fileID: 11400000, guid: 3a1f86c0718aac9499ca63947d4c596f, type: 2}
-  roomTest: {fileID: 8207917252838938902, guid: 54bd2065c3051a941bcdba38039d82b5, type: 3}
-  pathRoom: {fileID: 8207917252838938902, guid: 770990af7bcbfda48a9f1384bd70dec8, type: 3}
-  extraRoom: {fileID: 8207917252838938902, guid: 4584e0ea5a0d5e04faaccbdf2c09359e, type: 3}
-  doorTest: {fileID: 0}
+  minPathSize: 5
+  maxPathSize: 13
+  roomData: {fileID: 11400000, guid: 3a1f86c0718aac9499ca63947d4c596f, type: 2}
   map: []
   path: 
   showPath: 1
