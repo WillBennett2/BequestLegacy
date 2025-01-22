@@ -219,6 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 164060c7a29870f43afe5723b3212e7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mapGenerator: {fileID: 167848043}
   level: 0
   savedData: {fileID: 11400000, guid: 41a5ad6f537d31e4cbd398eb7a6b17bf, type: 2}
 --- !u!1 &519420028
