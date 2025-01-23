@@ -1,11 +1,20 @@
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
+
+public delegate void OnStateChangeHandler();
 
 public class GameManager : MonoBehaviour
 {
-    public enum GameState {MAIN_MENU,PAUSE,LEVEL_1,LEVEL_2,LEVEL_3,LEVEL_4 }
-    private static GameManager instance;
+    public enum GameState {MAIN_MENU,PAUSE,UNPAUSE,LEVEL_1,LEVEL_2,LEVEL_3,LEVEL_4 }
+    public static GameManager instance;
+    public GameState gameState;
+    private GameState priorState;
+    public static event Action<GameState> onGameStateChange;
 
     [Header("Player")]
     [SerializeField] private GameObject playerPrefab;
@@ -20,33 +29,10 @@ public class GameManager : MonoBehaviour
     private LoadMapData loadMapData;
 
 
-    public static GameManager Instance
-    {
-        get
-        {
-            if (GameManager.instance==null)
-            {
-                DontDestroyOnLoad(GameManager.instance);
-                GameManager.instance = new GameManager();
-            }
-            return GameManager.instance; 
-        }
-    }
-
-    public void OnApplicationQuit()
-    {
-        GameManager.instance = null;
-    }
-
-
-
-
-
-
-
-
     private void Awake()
     {
+        instance = this;
+
         savedData.levelData.Clear();
         loadMapData = new LoadMapData();
         saveMapData = new SaveMapData();
@@ -56,7 +42,7 @@ public class GameManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        StartGame();
+        UpdateGameState(GameState.MAIN_MENU);
     }
 
     // Update is called once per frame
@@ -79,6 +65,39 @@ public class GameManager : MonoBehaviour
         {
             level--;
         }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            UpdateGameState(GameState.PAUSE);
+        }
+    }
+    public void UpdateGameState(GameState newState)
+    {
+        GameState tempState = gameState;
+        gameState = newState;
+
+        switch (newState)
+        {
+            case GameState.MAIN_MENU:
+                break;
+            case GameState.PAUSE:
+                priorState = tempState;
+                break;
+            case GameState.UNPAUSE:
+                Debug.Log("unpause");
+                gameState = priorState;
+                break;
+            case GameState.LEVEL_1:
+                StartGame();
+                break;
+            case GameState.LEVEL_2:
+                break;
+            case GameState.LEVEL_3:
+                break;
+            case GameState.LEVEL_4:
+                break;
+        }
+
+        onGameStateChange?.Invoke(newState);
     }
 
     private void StartGame()

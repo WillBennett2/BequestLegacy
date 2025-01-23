@@ -9,8 +9,6 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class MapGen : MonoBehaviour
 {
-    [SerializeField] private GameManager gameManager;
-
     [Header("Sizes")]
     [SerializeField] private int tileWidth;
     [SerializeField] private int tileHeight;
@@ -52,13 +50,13 @@ public class MapGen : MonoBehaviour
             Debug.Log("Dungeon was too extreme");
             GenerateMap();
         }
-        gameManager.SaveData(map);
+        GameManager.instance.SaveData(map);
     }
     public void LoadMap()
     {
         ResetLastGeneration();
-        gameManager.LoadData();
-        LoadMap(gameManager.GetLoadedData().directionMap, gameManager.GetLoadedData().destinationMap, gameManager.GetLoadedData().mapTypes, gameManager.GetLoadedData().mapVariation);
+        GameManager.instance.LoadData();
+        LoadMap(GameManager.instance.GetLoadedData().directionMap, GameManager.instance.GetLoadedData().destinationMap, GameManager.instance.GetLoadedData().mapTypes, GameManager.instance.GetLoadedData().mapVariation);
         Debug.Log("Reloaded");
     }
     private void ResetLastGeneration()
