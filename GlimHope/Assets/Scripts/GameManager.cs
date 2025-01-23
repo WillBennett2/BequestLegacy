@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public enum GameState {MAIN_MENU,PAUSE,LEVEL_1,LEVEL_2,LEVEL_3,LEVEL_4 }
+    private static GameManager instance;
+
+    [Header("Player")]
+    [SerializeField] private GameObject playerPrefab;
+
     [Header("Level")]
     public MapGen mapGenerator;
     public int level;
@@ -12,6 +18,32 @@ public class GameManager : MonoBehaviour
     [SerializeField] public SaveLevelDataSO savedData;
     private SaveMapData saveMapData;
     private LoadMapData loadMapData;
+
+
+    public static GameManager Instance
+    {
+        get
+        {
+            if (GameManager.instance==null)
+            {
+                DontDestroyOnLoad(GameManager.instance);
+                GameManager.instance = new GameManager();
+            }
+            return GameManager.instance; 
+        }
+    }
+
+    public void OnApplicationQuit()
+    {
+        GameManager.instance = null;
+    }
+
+
+
+
+
+
+
 
     private void Awake()
     {
@@ -24,7 +56,7 @@ public class GameManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        mapGenerator.GenerateMap();
+        StartGame();
     }
 
     // Update is called once per frame
@@ -47,6 +79,18 @@ public class GameManager : MonoBehaviour
         {
             level--;
         }
+    }
+
+    private void StartGame()
+    {
+        //load scene
+
+        //generate map
+        mapGenerator.GenerateMap();
+        //place player
+        GameObject player = Instantiate(playerPrefab,mapGenerator.GetStartTilePos(),Quaternion.identity);
+
+
     }
 
     public void SaveData(List<MapData.Index2TileData> map)

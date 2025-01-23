@@ -33,6 +33,8 @@ public class MapGen : MonoBehaviour
     public List<MapData.Index2TileData> map;
     [SerializeField] private List<int> path;
     [SerializeField] private bool showPath;
+    private Vector3 startTilePos;
+    
 
     public void GenerateMap()
     {
@@ -142,7 +144,8 @@ public class MapGen : MonoBehaviour
                 map[i].tileData.roomType = 3;
                 map[i].tileData.isUsed = true;
                 map[i].tileData.isSolution = true;
-                map[i].tileData.roomVariation = GetEndType();
+                startTilePos = map[i].tileData.position;
+                map[i].tileData.roomVariation = GetStartType();
             }
         }
 
@@ -250,6 +253,7 @@ public class MapGen : MonoBehaviour
         map[currentIndex].tileData.roomVariation = GetEndType();
         map[currentIndex].tileData.isUsed = true;
         map[currentIndex].tileData.isSolution = true;
+        startTilePos = map[currentIndex].tileData.position;
 
         List<int> options = new List<int> { 1, 2, 3 };
         AssignPath(currentIndex, options, null, true);
@@ -525,6 +529,12 @@ public class MapGen : MonoBehaviour
     }
 
     #region Extra Utility
+
+    public Vector3 GetStartTilePos()
+    {
+        return startTilePos;
+    }
+
     private List<int> ShuffleList(List<int> options)
     {
         List<int> temp = new List<int>(options);
