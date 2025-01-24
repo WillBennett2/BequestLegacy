@@ -523,6 +523,11 @@ public class MapGen : MonoBehaviour
             {
                 Instantiate(wall, new Vector2(Tile.tileData.position.x - 7.20f, Tile.tileData.position.y), Quaternion.Euler(wall.transform.rotation.x, wall.transform.rotation.y, wall.transform.rotation.z), blockerContainer.transform);
             }
+            if (!Tile.tileData.upPassage && Tile.tileData.roomType == 4)
+            {
+                Instantiate(GetDoor(0), new Vector2(Tile.tileData.position.x, Tile.tileData.position.y + 7.20f), wall.transform.rotation, blockerContainer.transform);
+
+            }
         }
     }
 
@@ -583,6 +588,10 @@ public class MapGen : MonoBehaviour
     private GameObject GetWall()
     {
        return roomData.roomTypes.wallType;
+    }
+    private GameObject GetDoor(int index)
+    {
+        return roomData.roomTypes.doorTypes[index].room;
     }
 
     private int GetStartType()

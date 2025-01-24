@@ -10,7 +10,7 @@ public delegate void OnStateChangeHandler();
 
 public class GameManager : MonoBehaviour
 {
-    public enum GameState {MAIN_MENU,PAUSE,UNPAUSE,LEVEL_1,LEVEL_2,LEVEL_3,LEVEL_4 }
+    public enum GameState {MAIN_MENU,PAUSE,UNPAUSE,START_GAME,NEXT_LEVEL,LEVEL_3,LEVEL_4 }
     public static GameManager instance;
     public GameState gameState;
     private GameState priorState;
@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Player")]
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField]private GameObject player;
 
     [Header("Level")]
     public MapGen mapGenerator;
@@ -83,13 +84,13 @@ public class GameManager : MonoBehaviour
                 priorState = tempState;
                 break;
             case GameState.UNPAUSE:
-                Debug.Log("unpause");
                 gameState = priorState;
                 break;
-            case GameState.LEVEL_1:
+            case GameState.START_GAME:
                 StartGame();
                 break;
-            case GameState.LEVEL_2:
+            case GameState.NEXT_LEVEL:
+                NextLevel();
                 break;
             case GameState.LEVEL_3:
                 break;
@@ -105,13 +106,20 @@ public class GameManager : MonoBehaviour
         //load scene
 
         //generate map
-        mapGenerator.GenerateMap();
+        GenerateMap();
         //place player
-        GameObject player = Instantiate(playerPrefab,mapGenerator.GetStartTilePos(),Quaternion.identity);
-
-
+        player = Instantiate(playerPrefab,mapGenerator.GetStartTilePos(),Quaternion.identity);
+    }
+    public void GenerateMap()
+    {
+        mapGenerator.GenerateMap();
     }
 
+    public void NextLevel()
+    {
+        GenerateMap();
+        player.transform.position = mapGenerator.GetStartTilePos();
+    }
     public void SaveData(List<MapData.Index2TileData> map)
     {
         saveMapData.SaveMapLayout(map);

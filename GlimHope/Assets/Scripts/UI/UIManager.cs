@@ -24,7 +24,7 @@ public class UIManager : MonoBehaviour
             LoadMainMenu();
             UnloadPauseMenu();
         }
-        if(state == GameManager.GameState.LEVEL_1)
+        if(state == GameManager.GameState.START_GAME)
         {
             UnloadMainMenu();
             UnloadPauseMenu();

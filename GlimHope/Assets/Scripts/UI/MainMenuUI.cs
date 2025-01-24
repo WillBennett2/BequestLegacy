@@ -26,6 +26,6 @@ public class MainMenuUI : MonoBehaviour
 
     public void StartGamePressed()
     {
-        GameManager.instance.UpdateGameState(GameManager.GameState.LEVEL_1);
+        GameManager.instance.UpdateGameState(GameManager.GameState.START_GAME);
     }
 }
