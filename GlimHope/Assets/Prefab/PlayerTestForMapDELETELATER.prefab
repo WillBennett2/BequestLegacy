@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8796541211465068275}
   - component: {fileID: 1450443289547978481}
   - component: {fileID: 6238358278339639258}
+  - component: {fileID: 3856398721584656944}
   m_Layer: 0
   m_Name: PlayerTestForMapDELETELATER
   m_TagString: Player
@@ -163,7 +164,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
   m_Constraints: 0
 --- !u!114 &8796541211465068275
 MonoBehaviour:
@@ -218,3 +219,16 @@ MonoBehaviour:
   skillPrefab: {fileID: 8375035176081977496, guid: 1c64dc9aa698ade48a66604762b94a11, type: 3}
   flySpeed: 1000
   offset: 1
+--- !u!114 &3856398721584656944
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1013771384881997208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23abf798d56f59f4f833156411276eda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  totalMoney: 100

@@ -22,7 +22,9 @@ MonoBehaviour:
     - spawnWeight: 30
       room: {fileID: 8207917252838938902, guid: 46f6bcc16d366dc48b57b275bdae6404, type: 3}
     extraRooms:
-    - spawnWeight: 100
+    - spawnWeight: 90
+      room: {fileID: 1265521375463394129, guid: eb7fa9f312ec74f489f12f2e5e678520, type: 3}
+    - spawnWeight: 10
       room: {fileID: 8207917252838938902, guid: 3f207ed9c64563b4eb28bc657dc4d1f4, type: 3}
     startRooms:
     - spawnWeight: 100
