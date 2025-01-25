@@ -1,13 +1,17 @@
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem.Controls;
 using static UnityEditor.Progress;
+using Random = UnityEngine.Random;
 
 public class CandlerShop : MonoBehaviour
 {
+    public static event Action<int> OnCostOfItem;
+
     [SerializeField] private ItemStockSO itemStockData;
     [SerializeField] private List<GameObject> items;
     [SerializeField] private List<Transform> itemLocations;
@@ -20,12 +24,12 @@ public class CandlerShop : MonoBehaviour
 
     private void Awake()
     {
-        PlayerController.onPurchaseItem += BuyItem;
+        PlayerInventory.OnPurchaseItem += BuyItem;
         StockShop();
     }
     private void OnDestroy()
     {
-        PlayerController.onPurchaseItem -= BuyItem;
+        PlayerInventory.OnPurchaseItem -= BuyItem;
     }
 
     private void StockShop()
@@ -59,15 +63,11 @@ public class CandlerShop : MonoBehaviour
 
     public void RecieveEnterCollisionData(Collider2D hit, Transform itemHit)
     {
-        Debug.Log(hit.transform.position);
         for (int i = 0; i < itemLocations.Count; i++)
         {
             if (itemHit.transform.position == itemLocations[i].position)
             {
-                Debug.Log("item index " + itemHit.GetComponent<InWorldItem>().index);
-
                 itemToPurchaseIndex = itemHit.GetComponent<InWorldItem>().index;
-
             }
         }
 
@@ -79,16 +79,16 @@ public class CandlerShop : MonoBehaviour
 
     private void BuyItem(int totalMoney)
     {
-        if (itemToPurchaseIndex==-1)
+        if (itemToPurchaseIndex == -1)
         {
             return;
         }
         //check funds
         if (itemStockData.itemTypes[itemToPurchaseIndex].itemCost < totalMoney && items[itemToPurchaseIndex].activeInHierarchy)
         {
-            Debug.Log("Player has purchased " + items[itemToPurchaseIndex].name);
+            Debug.Log("Player has purchased " + items[itemToPurchaseIndex].name+" for a cost of "+ itemStockData.itemTypes[itemToPurchaseIndex].itemCost);
+            OnCostOfItem(itemStockData.itemTypes[itemToPurchaseIndex].itemCost);
             items[itemToPurchaseIndex].SetActive(false);
-            //update player funds
         }
     }
 }

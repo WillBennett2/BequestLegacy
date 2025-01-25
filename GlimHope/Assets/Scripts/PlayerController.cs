@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public static event Action<int> onPurchaseItem;
+    public static event Action OnPurchaseItem;
 
     [SerializeField] private float speed = 10.0f;
     private Rigidbody2D rb;
@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.F))
         {
-            onPurchaseItem?.Invoke(30);
+            OnPurchaseItem?.Invoke();
         }
         if (Input.GetKeyDown(KeyCode.Q))
         {
