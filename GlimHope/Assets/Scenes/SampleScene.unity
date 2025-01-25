@@ -389,6 +389,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameState: 0
   playerPrefab: {fileID: 1013771384881997208, guid: 44e6cd8a99ab0d74ab087357bcc1aee6, type: 3}
+  player: {fileID: 0}
   mapGenerator: {fileID: 167848043}
   level: 0
   savedData: {fileID: 11400000, guid: 41a5ad6f537d31e4cbd398eb7a6b17bf, type: 2}
@@ -608,7 +609,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 40
+  orthographic size: 99.28
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

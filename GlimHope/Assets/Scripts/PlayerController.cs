@@ -1,4 +1,5 @@
 using Assets.Scripts;
+using System;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -6,6 +7,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public static event Action<int> onPurchaseItem;
+
     [SerializeField] private float speed = 10.0f;
     private Rigidbody2D rb;
     private Vector2 input;
@@ -52,7 +55,10 @@ public class PlayerController : MonoBehaviour
         {
             Attack();
         }
-
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            onPurchaseItem?.Invoke(30);
+        }
         if (Input.GetKeyDown(KeyCode.Q))
         {
             skill1.Cast(transform.position, transform.rotation);

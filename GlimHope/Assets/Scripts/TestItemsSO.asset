@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e2136ba6388745458f4ce4a4b9dc933, type: 3}
+  m_Name: TestItemsSO
+  m_EditorClassIdentifier: 
+  itemTypes:
+  - spawnWeight: 33
+    item: {fileID: 6453797173806166133, guid: 756d618116e34174daa15a3a8fa742a2, type: 3}
+    itemCost: 20
+  - spawnWeight: 33
+    item: {fileID: 3181045560514142807, guid: 93f65b40791578a4091a8bdd53400e1c, type: 3}
+    itemCost: 5
+  - spawnWeight: 33
+    item: {fileID: 8112088704835973223, guid: a6dddd45d11f12846bea48cf6097dcab, type: 3}
+    itemCost: 10
