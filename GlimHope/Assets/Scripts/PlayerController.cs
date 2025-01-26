@@ -8,6 +8,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public static event Action OnPurchaseItem;
+    public static event Action OnShowInventory;
 
     [SerializeField] private float speed = 10.0f;
     private Rigidbody2D rb;
@@ -58,6 +59,10 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F))
         {
             OnPurchaseItem?.Invoke();
+        }
+        if (Input.GetKeyDown(KeyCode.I)|| Input.GetKeyDown(KeyCode.Tab))
+        {
+            OnShowInventory?.Invoke();
         }
         if (Input.GetKeyDown(KeyCode.Q))
         {

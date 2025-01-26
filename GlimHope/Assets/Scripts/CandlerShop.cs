@@ -11,6 +11,7 @@ using Random = UnityEngine.Random;
 public class CandlerShop : MonoBehaviour
 {
     public static event Action<int> OnCostOfItem;
+    public static event Action<ItemStockSO.ItemData> OnGainedItem;
 
     [SerializeField] private ItemStockSO itemStockData;
     [SerializeField] private List<GameObject> items;
@@ -88,6 +89,7 @@ public class CandlerShop : MonoBehaviour
         {
             Debug.Log("Player has purchased " + items[itemToPurchaseIndex].name+" for a cost of "+ itemStockData.itemTypes[itemToPurchaseIndex].itemCost);
             OnCostOfItem(itemStockData.itemTypes[itemToPurchaseIndex].itemCost);
+            OnGainedItem.Invoke(itemStockData.itemTypes[itemToPurchaseIndex]);
             items[itemToPurchaseIndex].SetActive(false);
         }
     }

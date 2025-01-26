@@ -107,8 +107,10 @@ public class GameManager : MonoBehaviour
 
         //generate map
         GenerateMap();
+        player.SetActive(true);
+        player.transform.position = mapGenerator.GetStartTilePos();
         //place player
-        player = Instantiate(playerPrefab,mapGenerator.GetStartTilePos(),Quaternion.identity);
+        //player = Instantiate(playerPrefab,mapGenerator.GetStartTilePos(),Quaternion.identity);
     }
     public void GenerateMap()
     {

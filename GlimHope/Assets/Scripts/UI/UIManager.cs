@@ -7,14 +7,19 @@ public class UIManager : MonoBehaviour
     [SerializeField] private MainMenuUI mainMenuUI;
     [SerializeField] private PauseUI pauseUI;
 
+    [SerializeField] private GameObject inventoryUI;
+    private bool inventoryUIActive = false;
+
 
     private void Awake()
     {
         GameManager.onGameStateChange += HandleStateChange;
+        PlayerController.OnShowInventory += ToggleInventoryUIActive;
     }
     private void OnDestroy()
     {
         GameManager.onGameStateChange -= HandleStateChange;
+        PlayerController.OnShowInventory -= ToggleInventoryUIActive;
     }
 
     private void HandleStateChange(GameManager.GameState state)
@@ -51,5 +56,28 @@ public class UIManager : MonoBehaviour
     public void UnloadPauseMenu()
     {
         pauseUI.SetUnactive();
+    }
+
+    private void ToggleInventoryUIActive()
+    {
+        if(inventoryUIActive == false)
+        {
+            ShowInventory();
+            inventoryUIActive = true;
+        }
+        else
+        {
+            HideInventory();
+            inventoryUIActive = false;
+        }
+    }
+
+    public void ShowInventory()
+    {
+        inventoryUI.SetActive(true);
+    }
+    public void HideInventory()
+    {
+        inventoryUI.SetActive(false);
     }
 }
