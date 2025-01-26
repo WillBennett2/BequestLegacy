@@ -6,6 +6,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ItemStockSO", menuName = "Scriptable Objects/ItemStockSO")]
 public class ItemStockSO : ScriptableObject
 {
+    public enum ItemTypes
+    {
+
+    }
     [SerializeField] public List<ItemData> itemTypes;
 
     [Serializable]
@@ -15,5 +19,14 @@ public class ItemStockSO : ScriptableObject
         [SerializeField][Tooltip("This should be a percentage out of 100")] public int spawnWeight;
         [SerializeField] public GameObject item;
         [SerializeField] public int itemCost;
+
+        public int healthChange;
+        public int healthBurnChange;
+        public int spellDamageChange;
+        public int armourChange;
+        public int movementSpeedChange;
+        public int magicCritChange;
+        public int magicCritChanceChange;
+        public int attackSpeedChange;
     }
 }

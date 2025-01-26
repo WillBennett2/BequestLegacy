@@ -18,42 +18,55 @@ public class UIHoverItem : MonoBehaviour
         m_itemDetails[index].GetComponentInChildren<Text>().text = item.itemName.ToString();
         m_itemDetails[index].SetActive(true);
         index++;
-        //if (0 < item.m_damageIncrease)
-        //{
-        //    m_itemDetails[index].GetComponentInChildren<Text>().text = "Strength        " + item.m_damageIncrease.ToString();
-        //    m_itemDetails[index].SetActive(true);
-        //    index++;
-        //}
-        //if (0 < item.m_attackSpeedIncrease)
-        //{
-        //    m_itemDetails[index].GetComponentInChildren<Text>().text = "Attack Speed    " + item.m_attackSpeedIncrease.ToString();
-        //    m_itemDetails[index].SetActive(true);
-        //    index++;
-        //}
-        //if (0 < item.m_ACIncrease)
-        //{
-        //    m_itemDetails[index].GetComponentInChildren<Text>().text = "Defence         " + item.m_ACIncrease.ToString();
-        //    m_itemDetails[index].SetActive(true);
-        //    index++;
-        //}
-        //if (0 < item.m_healthIncrease)
-        //{
-        //    m_itemDetails[index].GetComponentInChildren<Text>().text = "Max HP          " + item.m_healthIncrease.ToString();
-        //    m_itemDetails[index].SetActive(true);
-        //    index++;
-        //}
-        //if (0 < item.m_evasion)
-        //{
-        //    m_itemDetails[index].GetComponentInChildren<Text>().text = "Evasion         " + item.m_evasion.ToString();
-        //    m_itemDetails[index].SetActive(true);
-        //    index++;
-        //}
-        //if (0 < item.m_vamperism)
-        //{
-        //    m_equipedDetails[index].GetComponentInChildren<Text>().text = "Vamperism         " + item.m_vamperism.ToString();
-        //    m_equipedDetails[index].SetActive(true);
-        //    index++;
-        //}
+        if (0 != item.healthChange)
+        {
+            m_itemDetails[index].GetComponentInChildren<Text>().text = "Heath          " + item.healthChange.ToString();
+            m_itemDetails[index].SetActive(true);
+            index++;
+        }
+        if (0 != item.healthBurnChange)
+        {
+            m_itemDetails[index].GetComponentInChildren<Text>().text = "Health Burn    " + item.healthBurnChange.ToString();
+            m_itemDetails[index].SetActive(true);
+            index++;
+        }
+        if (0 != item.spellDamageChange)
+        {
+            m_itemDetails[index].GetComponentInChildren<Text>().text = "Spell Damage   " + item.spellDamageChange.ToString();
+            m_itemDetails[index].SetActive(true);
+            index++;
+        }
+        if (0 != item.armourChange)
+        {
+            m_itemDetails[index].GetComponentInChildren<Text>().text = "Armour         " + item.armourChange.ToString();
+            m_itemDetails[index].SetActive(true);
+            index++;
+        }
+        if (0 != item.movementSpeedChange)
+        {
+            m_itemDetails[index].GetComponentInChildren<Text>().text = "Movement Speed " + item.movementSpeedChange.ToString();
+            m_itemDetails[index].SetActive(true);
+            index++;
+        }
+        if (0 != item.magicCritChange)
+        {
+            m_itemDetails[index].GetComponentInChildren<Text>().text = "Magic Crit     " + item.magicCritChange.ToString();
+            m_itemDetails[index].SetActive(true);
+            index++;
+        }
+        if (0 != item.magicCritChanceChange)
+        {
+            m_itemDetails[index].GetComponentInChildren<Text>().text = "Magic Crit %   " + item.magicCritChanceChange.ToString();
+            m_itemDetails[index].SetActive(true);
+            index++;
+        }
+        if (0 != item.attackSpeedChange)
+        {
+            m_itemDetails[index].GetComponentInChildren<Text>().text = "Attack Speed   " + item.attackSpeedChange.ToString();
+            m_itemDetails[index].SetActive(true);
+            index++;
+        }
+
     }
     private void HideItemDetails()
     {

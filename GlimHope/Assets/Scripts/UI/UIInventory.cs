@@ -52,6 +52,8 @@ public class UIInventory : MonoBehaviour
                 xPos = 0;
                 yPos--;
             }
+
+            //update display stats
         }
     }
 }
