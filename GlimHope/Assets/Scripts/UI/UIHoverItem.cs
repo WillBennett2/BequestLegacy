@@ -18,9 +18,9 @@ public class UIHoverItem : MonoBehaviour
         m_itemDetails[index].GetComponentInChildren<Text>().text = item.itemName.ToString();
         m_itemDetails[index].SetActive(true);
         index++;
-        if (0 != item.healthChange)
+        if (0 != item.maxHealthChange)
         {
-            m_itemDetails[index].GetComponentInChildren<Text>().text = "Heath          " + item.healthChange.ToString();
+            m_itemDetails[index].GetComponentInChildren<Text>().text = "Heath          " + item.maxHealthChange.ToString();
             m_itemDetails[index].SetActive(true);
             index++;
         }

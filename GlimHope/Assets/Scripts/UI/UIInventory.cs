@@ -1,13 +1,27 @@
+using TMPro;
+using UnityEditor;
+using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
+using UnityEngine.UI;
 using static ItemStockSO;
+using static UnityEditor.Progress;
 
 public class UIInventory : MonoBehaviour
 {
+    [SerializeField]private EntityStats entityStats;
     private PlayerInventory inventory;
 
     [SerializeField] private Transform itemSlotContainer;
     [SerializeField] private Transform itemSlotTemplate;
 
+    [SerializeField] private TMP_Text maxHealthText;
+    [SerializeField] private TMP_Text healthBurnText;
+    [SerializeField] private TMP_Text spellDamageText;
+    [SerializeField] private TMP_Text armourText;
+    [SerializeField] private TMP_Text movementText;
+    [SerializeField] private TMP_Text magicCritText;
+    [SerializeField] private TMP_Text magicCritChanceText;
+    [SerializeField] private TMP_Text attackSpeedText;
 
     public void SetInventory(PlayerInventory inverntory)
     {
@@ -52,8 +66,21 @@ public class UIInventory : MonoBehaviour
                 xPos = 0;
                 yPos--;
             }
-
-            //update display stats
         }
+        UpdateText();
     }
+
+    private void UpdateText()
+    {
+        maxHealthText.text = entityStats.maxHealth.ToString();
+        healthBurnText.text = entityStats.healthBurn.ToString();
+        spellDamageText.text = entityStats.spellDamage.ToString();
+        armourText.text = entityStats.armour.ToString();
+        movementText.text = entityStats.movementSpeed.ToString();
+        magicCritText.text = entityStats.magicCritDamage.ToString();
+        magicCritChanceText.text = entityStats.magicCritChance.ToString();
+        attackSpeedText.text = entityStats.attackSpeed.ToString();
+
+    }
+
 }

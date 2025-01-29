@@ -17,7 +17,7 @@ MonoBehaviour:
     spawnWeight: 33
     item: {fileID: 6453797173806166133, guid: 756d618116e34174daa15a3a8fa742a2, type: 3}
     itemCost: 20
-    healthChange: 0
+    maxHealthChange: 0
     healthBurnChange: 0
     spellDamageChange: 0
     armourChange: 0
@@ -25,11 +25,11 @@ MonoBehaviour:
     magicCritChange: 0
     magicCritChanceChange: 0
     attackSpeedChange: 0
-  - itemName: Talow
+  - itemName: Tallow
     spawnWeight: 33
     item: {fileID: 3181045560514142807, guid: 93f65b40791578a4091a8bdd53400e1c, type: 3}
     itemCost: 5
-    healthChange: 0
+    maxHealthChange: 0
     healthBurnChange: 10
     spellDamageChange: 10
     armourChange: 0
@@ -41,7 +41,7 @@ MonoBehaviour:
     spawnWeight: 33
     item: {fileID: 8112088704835973223, guid: a6dddd45d11f12846bea48cf6097dcab, type: 3}
     itemCost: 10
-    healthChange: 5
+    maxHealthChange: 0
     healthBurnChange: -10
     spellDamageChange: -10
     armourChange: 0

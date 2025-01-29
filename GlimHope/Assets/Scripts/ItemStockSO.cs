@@ -20,7 +20,7 @@ public class ItemStockSO : ScriptableObject
         [SerializeField] public GameObject item;
         [SerializeField] public int itemCost;
 
-        public int healthChange;
+        public int maxHealthChange;
         public int healthBurnChange;
         public int spellDamageChange;
         public int armourChange;

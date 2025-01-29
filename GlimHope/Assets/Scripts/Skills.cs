@@ -17,7 +17,6 @@ namespace Assets.Scripts
         [SerializeField] private float cost;
 
         public GameObject skillPrefab;
-
         public Skills()
         {
             position = Vector2.zero;

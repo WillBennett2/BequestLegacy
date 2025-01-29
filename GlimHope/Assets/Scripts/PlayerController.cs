@@ -10,26 +10,29 @@ public class PlayerController : MonoBehaviour
     public static event Action OnPurchaseItem;
     public static event Action OnShowInventory;
 
-    [SerializeField] private float speed = 10.0f;
+    private EntityStats stats;
+
+    //[SerializeField] private float speed = 10.0f;
     private Rigidbody2D rb;
     private Vector2 input;
 
     private Skills skill1;
     private Skills skill2;
 
-    [SerializeField] private float maxHealth = 500.0f;
-    private float currentHealth;
+    //[SerializeField] private float maxHealth = 500.0f;
+    //private float currentHealth;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        stats = GetComponent<EntityStats>();
         rb = GetComponent<Rigidbody2D>();
 
         skill1 = GetComponent<Flamethrower>();
         skill2 = GetComponent<Fireball>();
 
-        currentHealth = GetMaxHealth();
-        Debug.Log("health: " + currentHealth);
+        //currentHealth = stats.maxHealth;
+        Debug.Log("health: " + stats.health);
     }
 
     // Update is called once per frame
@@ -74,12 +77,9 @@ public class PlayerController : MonoBehaviour
         }
         #endregion
 
-        #region tick damage
-        currentHealth -= Time.deltaTime;
-        #endregion
 
         #region dead
-        if (currentHealth < 0)
+        if (stats.health < 0)
         {
             Dead();
         }
@@ -88,7 +88,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.linearVelocity = input * speed;      
+        rb.linearVelocity = input * stats.movementSpeed;      
     }
 
     private void Attack()
@@ -96,15 +96,10 @@ public class PlayerController : MonoBehaviour
         // Wick Attack Here
     }
 
-    public float GetMaxHealth()
-    {
-        return maxHealth;
-    }
-
     public void TakeDamage(float damage)
     {
-        currentHealth -= damage;
-        Debug.Log("health: " + currentHealth);
+        stats.UpdateHealthValue( damage);
+        Debug.Log("health: " + stats.health);
     }
 
     private void Dead()

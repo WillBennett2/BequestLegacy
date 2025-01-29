@@ -3290,7 +3290,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1013771384881997208, guid: 44e6cd8a99ab0d74ab087357bcc1aee6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1819373497}
   m_SourcePrefab: {fileID: 100100000, guid: 44e6cd8a99ab0d74ab087357bcc1aee6, type: 3}
 --- !u!1 &709902241
 GameObject:
@@ -7076,7 +7079,7 @@ GameObject:
   - component: {fileID: 1630860214}
   - component: {fileID: 1630860213}
   m_Layer: 5
-  m_Name: HealthText
+  m_Name: MaxHealthText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7789,8 +7792,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Glim Hope
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -8018,6 +8021,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23abf798d56f59f4f833156411276eda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1819373497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1819373488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4cd31e2fa533874ea4dd69ede2b71ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 550
+  maxHealth: 550
+  healthBurn: 2
+  spellDamage: 10
+  armour: 0
+  movementSpeed: 10
+  magicCritDamage: 0
+  magicCritChance: 0
+  attackSpeed: 10
 --- !u!1 &1832479774
 GameObject:
   m_ObjectHideFlags: 0
@@ -10614,8 +10638,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baca954a409fdae49a6260ddc68210e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entityStats: {fileID: 1819373497}
   itemSlotContainer: {fileID: 574433908684641001}
   itemSlotTemplate: {fileID: 5945953332000747343}
+  maxHealthText: {fileID: 1630860213}
+  healthBurnText: {fileID: 531549236}
+  spellDamageText: {fileID: 723508130}
+  armourText: {fileID: 1148572194}
+  movementText: {fileID: 213400404}
+  magicCritText: {fileID: 840370160}
+  magicCritChanceText: {fileID: 1986674080}
+  attackSpeedText: {fileID: 479939522}
 --- !u!224 &5945953332000747343
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10654,7 +10687,7 @@ MonoBehaviour:
     spawnWeight: 0
     item: {fileID: 0}
     itemCost: 0
-    healthChange: 0
+    maxHealthChange: 0
     healthBurnChange: 0
     spellDamageChange: 0
     armourChange: 0
