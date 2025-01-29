@@ -103,6 +103,7 @@ public class GameManager : MonoBehaviour
 
     private void StartGame()
     {
+        
         //load scene
 
         //generate map

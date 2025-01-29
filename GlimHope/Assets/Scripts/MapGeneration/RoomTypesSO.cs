@@ -8,6 +8,17 @@ public class RoomTypesSO : ScriptableObject
 {
     [SerializeField] public RoomTypes roomTypes;
 
+    public enum ConditionTypes
+    {
+        None,
+        Comabt
+    }
+    [Serializable]public struct Condition
+    {
+        public ConditionTypes type;
+        public int completionValue;
+        public bool completed;
+    }
     [Serializable]public struct RoomTypes
     {
         [SerializeField] public List<RoomData> blankRooms;
@@ -23,6 +34,9 @@ public class RoomTypesSO : ScriptableObject
     {
         [SerializeField][Tooltip("This should be a percentage out of 100")] public int spawnWeight;
         [SerializeField] public GameObject room;
+        [SerializeField] public Condition condition;
+        
+
     }
     
 }

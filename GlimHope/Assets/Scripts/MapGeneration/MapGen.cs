@@ -6,6 +6,7 @@ using UnityEditor.Experimental.GraphView;
 using System.Collections;
 using System.Linq;
 using static UnityEngine.EventSystems.EventTrigger;
+using UnityEngine.WSA;
 
 public class MapGen : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class MapGen : MonoBehaviour
     [SerializeField] private int maxPathSize = 13;
 
     [Header("Gameobject")]
+    [SerializeField] private GameObject roomPrefab;
     [SerializeField] private RoomTypesSO roomData;
 
     private GameObject dungeonContainer;
@@ -365,31 +367,39 @@ public class MapGen : MonoBehaviour
 
     private void CreateVisual()
     {
-        foreach (Index2TileData tile in map)
+        for (int i = 0; i < map.Count; i++)
         {
-            switch (tile.tileData.roomType)
+            GameObject room = Instantiate(roomPrefab, map[i].tileData.position, Quaternion.identity, roomContainer.transform);
+            switch (map[i].tileData.roomType)
             {
                 case 0:
-                    tile.tileData.room = roomData.roomTypes.blankRooms[tile.tileData.roomVariation].room;
+                    map[i].tileData.room = roomData.roomTypes.blankRooms[map[i].tileData.roomVariation].room;
+                    room.GetComponent<RoomConditions>().roomData = roomData.roomTypes.blankRooms[map[i].tileData.roomVariation];
                     break;
                 case 1:
-                    tile.tileData.room = roomData.roomTypes.pathRooms[tile.tileData.roomVariation].room;
+                    map[i].tileData.room = roomData.roomTypes.pathRooms[map[i].tileData.roomVariation].room;
+                    room.GetComponent<RoomConditions>().roomData = roomData.roomTypes.pathRooms[map[i].tileData.roomVariation];
                     break;
                 case 2:
-                    tile.tileData.room = roomData.roomTypes.extraRooms[tile.tileData.roomVariation].room;
+                    map[i].tileData.room = roomData.roomTypes.extraRooms[map[i].tileData.roomVariation].room;
+                    room.GetComponent<RoomConditions>().roomData = roomData.roomTypes.extraRooms[map[i].tileData.roomVariation];
                     break;
                 case 3:
-                    tile.tileData.room = roomData.roomTypes.startRooms[tile.tileData.roomVariation].room;
+                    map[i].tileData.room = roomData.roomTypes.startRooms[map[i].tileData.roomVariation].room;
+                    room.GetComponent<RoomConditions>().roomData = roomData.roomTypes.startRooms[map[i].tileData.roomVariation];
                     break;
                 case 4:
-                    tile.tileData.room = roomData.roomTypes.endRooms[tile.tileData.roomVariation].room;
+                    map[i].tileData.room = roomData.roomTypes.endRooms[map[i].tileData.roomVariation].room;
+                    room.GetComponent<RoomConditions>().roomData = roomData.roomTypes.endRooms[map[i].tileData.roomVariation];
                     break;
                 default:
                     break;
             }
-
-            Instantiate(tile.tileData.room, tile.tileData.position, Quaternion.identity, roomContainer.transform);
+            room.name = map[i].tileData.room.name;
+            room.GetComponent<RoomConditions>().index = i;
+            Instantiate(map[i].tileData.room, map[i].tileData.position, Quaternion.identity, room.transform);
         }
+
     }
 
     private void PlaceExtraRooms()

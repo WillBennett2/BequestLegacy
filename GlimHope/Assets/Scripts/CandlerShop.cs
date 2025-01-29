@@ -62,7 +62,7 @@ public class CandlerShop : MonoBehaviour
         return -1;
     }
 
-    public void RecieveEnterCollisionData(Collider2D hit, Transform itemHit)
+    public ItemStockSO.ItemData RecieveEnterCollisionData(Collider2D hit, Transform itemHit)
     {
         for (int i = 0; i < itemLocations.Count; i++)
         {
@@ -71,6 +71,7 @@ public class CandlerShop : MonoBehaviour
                 itemToPurchaseIndex = itemHit.GetComponent<InWorldItem>().index;
             }
         }
+        return itemStockData.itemTypes[itemToPurchaseIndex];
 
     }
     public void RecieveExitCollisionData(Collider2D hit)

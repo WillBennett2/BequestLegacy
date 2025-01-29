@@ -16,23 +16,55 @@ MonoBehaviour:
     blankRooms:
     - spawnWeight: 100
       room: {fileID: 8207917252838938902, guid: 54bd2065c3051a941bcdba38039d82b5, type: 3}
+      condition:
+        type: 0
+        completionValue: 0
+        completed: 0
     pathRooms:
     - spawnWeight: 70
       room: {fileID: 8207917252838938902, guid: 770990af7bcbfda48a9f1384bd70dec8, type: 3}
+      condition:
+        type: 1
+        completionValue: 0
+        completed: 0
     - spawnWeight: 30
       room: {fileID: 8207917252838938902, guid: 46f6bcc16d366dc48b57b275bdae6404, type: 3}
+      condition:
+        type: 0
+        completionValue: 0
+        completed: 0
     extraRooms:
     - spawnWeight: 90
       room: {fileID: 1265521375463394129, guid: eb7fa9f312ec74f489f12f2e5e678520, type: 3}
+      condition:
+        type: 0
+        completionValue: 0
+        completed: 0
     - spawnWeight: 10
       room: {fileID: 8207917252838938902, guid: 3f207ed9c64563b4eb28bc657dc4d1f4, type: 3}
+      condition:
+        type: 0
+        completionValue: 0
+        completed: 0
     startRooms:
     - spawnWeight: 100
       room: {fileID: 8207917252838938902, guid: 08213e42a63afcf49806ce525224561f, type: 3}
+      condition:
+        type: 0
+        completionValue: 0
+        completed: 0
     endRooms:
     - spawnWeight: 100
       room: {fileID: 8207917252838938902, guid: aabaad26cdcdd10489172f95ea6423a5, type: 3}
+      condition:
+        type: 0
+        completionValue: 0
+        completed: 0
     doorTypes:
     - spawnWeight: 100
       room: {fileID: 5521830041417602780, guid: a841231317b75e44e863713157d90890, type: 3}
+      condition:
+        type: 0
+        completionValue: 0
+        completed: 0
     wallType: {fileID: 658221293075231161, guid: f86cf305a92834844a7c62e30d1905f0, type: 3}
