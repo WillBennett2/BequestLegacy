@@ -1,7 +1,12 @@
+using System;
 using UnityEngine;
+using static RoomTypesSO;
 
 public class RoomConditions : MonoBehaviour
 {
+    public static event Action<bool> OnRoomComplete;
+    public static event Action<bool> OnEnterNewRoom;
+
     [SerializeField] public int index;
     [SerializeField] public RoomTypesSO.RoomData roomData;
 
@@ -16,6 +21,13 @@ public class RoomConditions : MonoBehaviour
         
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            OnRoomComplete?.Invoke(true);
+        }
+    }
 
     private void HandleEnemyDeath(int roomIndex)
     {
@@ -27,6 +39,12 @@ public class RoomConditions : MonoBehaviour
         if (enemyCount==roomData.condition.completionValue)
         {
             roomData.condition.completed = true;
+            OnRoomComplete?.Invoke(roomData.condition.completed);
         }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Debug.Log("player in room");
+        OnEnterNewRoom?.Invoke(roomData.condition.completed);
     }
 }

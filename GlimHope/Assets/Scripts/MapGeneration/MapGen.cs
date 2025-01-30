@@ -25,6 +25,7 @@ public class MapGen : MonoBehaviour
 
     private GameObject dungeonContainer;
     private GameObject blockerContainer;
+    private GameObject doorContainer;
     private GameObject roomContainer;
 
 
@@ -45,6 +46,7 @@ public class MapGen : MonoBehaviour
         CreatePath();
         PlaceExtraRooms();
         BlockNonPassages();
+        PlaceDoors();
         CreateVisual();
 
         if(path.Count<minPathSize || path.Count > maxPathSize)
@@ -68,11 +70,13 @@ public class MapGen : MonoBehaviour
             Destroy(blockerContainer);
             Destroy(roomContainer);
             Destroy(dungeonContainer);
+            Destroy(doorContainer);
         }
 
         dungeonContainer = null;
         blockerContainer = null;
         roomContainer = null;
+        doorContainer = null;
 
         map.Clear();
         path.Clear();
@@ -85,6 +89,8 @@ public class MapGen : MonoBehaviour
         blockerContainer.transform.SetParent(dungeonContainer.transform);
         roomContainer = new GameObject("RoomContainer");
         roomContainer.transform.SetParent(dungeonContainer.transform);
+        doorContainer = new GameObject("DoorContainer");
+        doorContainer.transform.SetParent(dungeonContainer.transform);
     }
     private void InitialiseTile(int index, Vector2 position)
     {
@@ -130,6 +136,7 @@ public class MapGen : MonoBehaviour
         InitialiseMap();
         CreatePath(directionMap, destinationMap, mapTypes, mapVariation);
         BlockNonPassages();
+        PlaceDoors();
         CreateVisual();
     }
     
@@ -375,22 +382,28 @@ public class MapGen : MonoBehaviour
                 case 0:
                     map[i].tileData.room = roomData.roomTypes.blankRooms[map[i].tileData.roomVariation].room;
                     room.GetComponent<RoomConditions>().roomData = roomData.roomTypes.blankRooms[map[i].tileData.roomVariation];
+                    room.GetComponent<RoomConditions>().roomData.condition.completed = true;
                     break;
                 case 1:
                     map[i].tileData.room = roomData.roomTypes.pathRooms[map[i].tileData.roomVariation].room;
                     room.GetComponent<RoomConditions>().roomData = roomData.roomTypes.pathRooms[map[i].tileData.roomVariation];
+                    room.GetComponent<RoomConditions>().roomData.condition.completed = false;
                     break;
                 case 2:
                     map[i].tileData.room = roomData.roomTypes.extraRooms[map[i].tileData.roomVariation].room;
                     room.GetComponent<RoomConditions>().roomData = roomData.roomTypes.extraRooms[map[i].tileData.roomVariation];
+                    room.GetComponent<RoomConditions>().roomData.condition.completed = true;
                     break;
                 case 3:
                     map[i].tileData.room = roomData.roomTypes.startRooms[map[i].tileData.roomVariation].room;
                     room.GetComponent<RoomConditions>().roomData = roomData.roomTypes.startRooms[map[i].tileData.roomVariation];
+                    room.GetComponent<RoomConditions>().roomData.condition.completed = true;
+                    //room.GetComponent<RoomConditions>().roomData.condition.completed = true;
                     break;
                 case 4:
                     map[i].tileData.room = roomData.roomTypes.endRooms[map[i].tileData.roomVariation].room;
                     room.GetComponent<RoomConditions>().roomData = roomData.roomTypes.endRooms[map[i].tileData.roomVariation];
+                    room.GetComponent<RoomConditions>().roomData.condition.completed = true;
                     break;
                 default:
                     break;
@@ -536,6 +549,37 @@ public class MapGen : MonoBehaviour
             if (!Tile.tileData.upPassage && Tile.tileData.roomType == 4)
             {
                 Instantiate(GetDoor(0), new Vector2(Tile.tileData.position.x, Tile.tileData.position.y + 7.20f), wall.transform.rotation, blockerContainer.transform);
+
+            }
+        }
+    }
+    private void PlaceDoors()
+    {
+        // Quaternion.Euler(door.transform.rotation.x, door.transform.rotation.y, door.transform.rotation.z)
+        GameObject door = GetDoor(1);
+        foreach (Index2TileData Tile in map)
+        {
+            // does it need a door?
+            if (Tile.tileData.upPassage)
+            {
+                Instantiate(door, new Vector2(Tile.tileData.position.x, Tile.tileData.position.y + 7.20f), door.transform.rotation, doorContainer.transform);
+
+            }
+            if (Tile.tileData.rightPassage)
+            {
+                Instantiate(door, new Vector2(Tile.tileData.position.x + 7.20f, Tile.tileData.position.y), Quaternion.Euler(door.transform.rotation.x, door.transform.rotation.y, door.transform.rotation.z-90f), doorContainer.transform);
+            }
+            if (Tile.tileData.downPassage)
+            {
+                Instantiate(door, new Vector2(Tile.tileData.position.x, Tile.tileData.position.y - 7.20f), door.transform.rotation, doorContainer.transform);
+            }
+            if (Tile.tileData.leftPassage)
+            {
+                Instantiate(door, new Vector2(Tile.tileData.position.x - 7.20f, Tile.tileData.position.y), Quaternion.Euler(door.transform.rotation.x, door.transform.rotation.y, door.transform.rotation.z - 90f), doorContainer.transform);
+            }
+            if (!Tile.tileData.upPassage && Tile.tileData.roomType == 4)
+            {
+                Instantiate(GetDoor(0), new Vector2(Tile.tileData.position.x, Tile.tileData.position.y + 7.20f), door.transform.rotation, blockerContainer.transform);
 
             }
         }

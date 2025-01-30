@@ -67,4 +67,10 @@ MonoBehaviour:
         type: 0
         completionValue: 0
         completed: 0
+    - spawnWeight: 100
+      room: {fileID: 6786049184909650594, guid: e2757a904a4d57d4299ff083c151eec7, type: 3}
+      condition:
+        type: 0
+        completionValue: 0
+        completed: 0
     wallType: {fileID: 658221293075231161, guid: f86cf305a92834844a7c62e30d1905f0, type: 3}
